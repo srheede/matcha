@@ -1,4 +1,4 @@
-package wethinkcode.com.matcha;
+package wethinkcode.co.za.matcha;
 
 import org.junit.Test;
 

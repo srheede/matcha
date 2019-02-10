@@ -16,5 +16,7 @@ public class submitRegister extends AppCompatActivity {
             String FirstName = getIntent().getExtras().getString("wethinkcode.co.za.matcha.FirstName");
             FirstNameTV.setText(FirstName);
         }
+
+
     }
 }

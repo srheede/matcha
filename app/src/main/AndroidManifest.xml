@@ -19,8 +19,5 @@
             </intent-filter>
         </activity>
         <activity android:name=".Register" />
-        <activity android:name=".submitRegister" />
-        <activity android:name=".CreateDatabase"></activity>
     </application>
-
 </manifest>

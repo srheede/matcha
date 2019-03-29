@@ -7,4 +7,7 @@
     <string name="email_address">Email Address</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
+    <string name="facebook_app_id">237339123767146</string>
+    <string name="fb_login_protocol_scheme">fb237339123767146</string>
+    <string name="title_activity_account">Account</string>
 </resources>

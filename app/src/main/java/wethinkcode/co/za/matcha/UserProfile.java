@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.firebase.auth.AuthCredential;
@@ -16,7 +17,7 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
-public class Account extends AppCompatActivity {
+public class UserProfile extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthlistener = new FirebaseAuth.AuthStateListener() {
@@ -33,12 +34,12 @@ public class Account extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_account);
+        setContentView(R.layout.activity_userprofile);
 
         mAuth = FirebaseAuth.getInstance();
 
-        Button registerBttn = findViewById(R.id.logoutBttn);
-        registerBttn.setOnClickListener(new View.OnClickListener() {
+        TextView Logout = findViewById(R.id.TextViewLogout);
+        Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();

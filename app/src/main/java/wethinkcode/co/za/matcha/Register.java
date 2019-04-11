@@ -3,21 +3,19 @@ package wethinkcode.co.za.matcha;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.content.Intent;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -26,12 +24,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -92,7 +90,7 @@ public class  Register extends AppCompatActivity
         }
     }
 
-    private boolean validateOther() {
+/*    private boolean validateOther() {
         EditText UsernameEditText = findViewById(R.id.username);
         EditText FirstNameEditText = findViewById(R.id.firstname);
         EditText SurnameEditText = findViewById(R.id.surname);
@@ -111,7 +109,7 @@ public class  Register extends AppCompatActivity
         } else {
             return true;
         }
-    }
+    }*/
 
     private boolean confirmPW() {
         EditText PWEditText = findViewById(R.id.pw);
@@ -131,6 +129,8 @@ public class  Register extends AppCompatActivity
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
+    private ProgressBar progress;
+    private TextView TVLogin;
 
 
 
@@ -139,6 +139,24 @@ public class  Register extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if (firebaseAuth.getCurrentUser() != null) {
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    updateUI(currentUser);
+                    Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                    startActivity(gotoAccount);
+                }
+            }
+        });
+
+        TVLogin = (TextView) findViewById(R.id.textViewLogin);
+
+        progress = (ProgressBar)findViewById(R.id.progressBar);
+
+        mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -158,8 +176,8 @@ public class  Register extends AppCompatActivity
 
             @Override
             public void onSuccess(LoginResult loginResult) {
+                progress.setVisibility(View.VISIBLE);
                 handleFacebookAccessToken(loginResult.getAccessToken());
-                loginButton.setEnabled(false);
 
             }
 
@@ -174,11 +192,20 @@ public class  Register extends AppCompatActivity
             }
         });
 
+        TVLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gotoLogin = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(gotoLogin);
+            }
+        });
+
         SignInButton signInButton = findViewById(R.id.sign_in_button);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progress.setVisibility(View.VISIBLE);
                 switch (v.getId()) {
                     case R.id.sign_in_button:
                         signIn();
@@ -187,35 +214,43 @@ public class  Register extends AppCompatActivity
             }
         });
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-
-        Button registerSubmit = findViewById(R.id.registerSubmit);
+        Button registerSubmit = findViewById(R.id.loginSubmit);
         registerSubmit.setOnClickListener(new View.OnClickListener()
         {
 
             @Override
             public void onClick(View v)
             {
-                if (validateOther() && validateEmail() && validatePW() && confirmPW()) {
-                    User user;
-                    EditText FirstNameEditText = findViewById(R.id.firstname);
-                    EditText SurnameEditText = findViewById(R.id.surname);
-                    EditText UsernameEditText = findViewById(R.id.username);
+                progress.setVisibility(View.VISIBLE);
+
+                if (validateEmail() && validatePW() && confirmPW()) {
                     EditText EmailEditText = findViewById(R.id.email);
                     EditText PWEditText = findViewById(R.id.pw);
 
-                    String FirstName = FirstNameEditText.getText().toString();
-                    String Surname = SurnameEditText.getText().toString();
-                    String Username = UsernameEditText.getText().toString();
                     String Email = EmailEditText.getText().toString();
                     String PW = PWEditText.getText().toString();
 
-                    user = new User(Username, Email, FirstName, Surname, PW, "", "", "");
-                    users.push().setValue(user);
-
-                    Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
-                    startActivity(gotoAccount);
+                    mAuth.createUserWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(Register.this, "User account created.",
+                                        Toast.LENGTH_SHORT).show();
+                               // FirebaseUser user = task.getResult().getUser();
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                updateUI(user);
+                            } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(Register.this, "User already exists.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(Register.this, task.getException().getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -234,13 +269,12 @@ public class  Register extends AppCompatActivity
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                progress.setVisibility(View.GONE);
                 // Google Sign In failed, update UI appropriately
                 Toast.makeText(Register.this, "Authentication failed.",
                         Toast.LENGTH_SHORT).show();
                 // ...
             }
-/*            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);*/
         }
         else {
             // Pass the activity result back to the Facebook SDK
@@ -251,30 +285,6 @@ public class  Register extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            updateUI(currentUser);
-        }
-
-/*        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            updateGUI(account);
-        }*/
-
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            updateGUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            updateUI(null);
-        }
     }
 
     private void signIn() {
@@ -284,37 +294,48 @@ public class  Register extends AppCompatActivity
 
     private void updateUI(FirebaseUser currentUser){
 
-        Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
-        startActivity(gotoAccount);
 
-    }
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference users = database.child("users");
+       // String UID;
+       // String username;
+        //String email;
+        User user;
 
-    private void updateGUI(GoogleSignInAccount currentUser){
-
-        Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
-        startActivity(gotoAccount);
+       // UID = currentUser.getUid();
+       // username = currentUser.getDisplayName();
+      //  email = currentUser.getEmail();
+        user = new User("UID", "username", "email");
+       // users.push().setValue(user);
 
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Toast.makeText(Register.this, "User account created.",
+                                Toast.LENGTH_SHORT).show();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(Register.this, e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            updateUI(null);
-                        }
-
-                        // ...
+                        progress.setVisibility(View.GONE);
                     }
                 });
     }
@@ -322,28 +343,35 @@ public class  Register extends AppCompatActivity
     private void handleFacebookAccessToken(AccessToken token) {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+            mAuth.signInWithCredential(credential)
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            Toast.makeText(Register.this, "User account created.",
+                                    Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            loginButton.setEnabled(true);
-                            Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
-                            startActivity(gotoAccount);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(Register.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            loginButton.setEnabled(true);
-                            //updateUI(null);
                         }
-
-                        // ...
-                    }
-                });
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            if (e instanceof FirebaseAuthUserCollisionException){
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(Register.this, "User already exists.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                progress.setVisibility(View.GONE);
+                                Toast.makeText(Register.this, e.getMessage(),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    })
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            progress.setVisibility(View.GONE);
+                        }
+                    });
+        }
     }
-
-}

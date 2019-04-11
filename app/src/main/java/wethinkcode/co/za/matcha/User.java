@@ -1,28 +1,23 @@
 package wethinkcode.co.za.matcha;
 
 public class User {
-    String Username;
-    String Email;
-    String FirstName;
+    private String UID;
+    private String Username;
+    private String Email;
+/*    String FirstName;
     String Surname;
-    String Password;
     String Gender;
     String SexPref;
     String Bio;
     String Interests;
     String Pics;
     String ProfPic;
-    String Location;
+    String Location;*/
 
-    public User(String username, String email, String firstName, String surname, String password, String gender, String sexPref, String bio) {
+    public User(String Uid, String username, String email) {
+        UID = Uid;
         Username = username;
         Email = email;
-        FirstName = firstName;
-        Surname = surname;
-        Password = password;
-        Gender = gender;
-        SexPref = sexPref;
-        Bio = bio;
     }
 
     public String getUsername() {
@@ -33,16 +28,12 @@ public class User {
         return Email;
     }
 
-    public String getFirstName() {
+/*    public String getFirstName() {
         return FirstName;
     }
 
     public String getSurname() {
         return Surname;
-    }
-
-    public String getPassword() {
-        return Password;
     }
 
     public String getGender() {
@@ -55,5 +46,5 @@ public class User {
 
     public String getBio() {
         return Bio;
-    }
+    }*/
 }

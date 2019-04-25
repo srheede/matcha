@@ -1,5 +1,7 @@
 package wethinkcode.co.za.matcha;
 
+import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +18,9 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -28,6 +33,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,93 +44,23 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 
 public class  Register extends AppCompatActivity
 {
-    private static final Pattern PASSWORD_LENGTH =
-        Pattern.compile("^.{8,}$");
-    private static final Pattern PASSWORD_NUMBER =
-            Pattern.compile("^(?=.*[0-9]).{2,}$");
-    private static final Pattern PASSWORD_LETTER =
-            Pattern.compile("^(?=.*[a-zA-Z]).{2,}$");
-    private static final Pattern PASSWORD_SPACE =
-            Pattern.compile("^(?=\\S+$).{2,}$");
 
-    private boolean validateEmail() {
-        EditText EmailEditText = findViewById(R.id.email);
-        String Email = EmailEditText.getText().toString();
-        if (Email.isEmpty()) {
-            EmailEditText.setError("Field can't be empty.");
-            return false;
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
-            EmailEditText.setError("Please enter a valid email address.");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean validatePW() {
-        EditText PWEditText = findViewById(R.id.pw);
-        String PW = PWEditText.getText().toString();
-        if (PW.isEmpty()) {
-            PWEditText.setError("Field can't be empty.");
-            return false;
-        } else if (!PASSWORD_LETTER.matcher(PW).matches()) {
-            PWEditText.setError("Password must contain at least one letter.");
-            return false;
-        } else if (!PASSWORD_NUMBER.matcher(PW).matches()) {
-            PWEditText.setError("Password must contain at least one digit.");
-            return false;
-        } else if (!PASSWORD_SPACE.matcher(PW).matches()) {
-            PWEditText.setError("Password can't have any spaces.");
-            return false;
-        } else if (!PASSWORD_LENGTH.matcher(PW).matches()) {
-            PWEditText.setError("Password must be at least 8 characters long.");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-/*    private boolean validateOther() {
-        EditText UsernameEditText = findViewById(R.id.username);
-        EditText FirstNameEditText = findViewById(R.id.firstname);
-        EditText SurnameEditText = findViewById(R.id.surname);
-        String Username = UsernameEditText.getText().toString();
-        String FirstName = FirstNameEditText.getText().toString();
-        String Surname = SurnameEditText.getText().toString();
-        if (FirstName.isEmpty()) {
-            FirstNameEditText.setError("Field can't be empty.");
-            return false;
-        } else if (Surname.isEmpty()) {
-            SurnameEditText.setError("Field can't be empty.");
-            return false;
-        } else if (Username.isEmpty()) {
-            UsernameEditText.setError("Field can't be empty.");
-            return false;
-        } else {
-            return true;
-        }
-    }*/
-
-    private boolean confirmPW() {
-        EditText PWEditText = findViewById(R.id.pw);
-        EditText ConfirmPWEditText = findViewById(R.id.confirmpw);
-        String PW = PWEditText.getText().toString();
-        String ConfirmPW = ConfirmPWEditText.getText().toString();
-        if (!PW.equals(ConfirmPW)) {
-            PWEditText.setError("Passwords don't match.");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
+    private static final Pattern PASSWORD_LENGTH = Pattern.compile("^.{8,}$");
+    private static final Pattern PASSWORD_NUMBER = Pattern.compile("^(?=.*[0-9]).{2,}$");
+    private static final Pattern PASSWORD_LETTER = Pattern.compile("^(?=.*[a-zA-Z]).{2,}$");
+    private static final Pattern PASSWORD_SPACE = Pattern.compile("^(?=\\S+$).{2,}$");
     private CallbackManager mCallbackManager;
     private LoginButton loginButton;
     private FirebaseAuth mAuth;
@@ -132,31 +69,43 @@ public class  Register extends AppCompatActivity
     private ProgressBar progress;
     private TextView TVLogin;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Progress bar
+
+        progress = (ProgressBar)findViewById(R.id.progressBar);
+
+        // Link to login area
+
+        TVLogin = (TextView) findViewById(R.id.textViewLogin);
+
+        TVLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gotoLogin = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(gotoLogin);
+            }
+        });
+
+        // Firebase Authentication
+
+        mAuth = FirebaseAuth.getInstance();
+
         FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    updateUI(currentUser);
                     Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
                     startActivity(gotoAccount);
                 }
             }
         });
 
-        TVLogin = (TextView) findViewById(R.id.textViewLogin);
-
-        progress = (ProgressBar)findViewById(R.id.progressBar);
-
-        mAuth = FirebaseAuth.getInstance();
+        // Google Sign Up
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -165,19 +114,53 @@ public class  Register extends AppCompatActivity
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference users = database.child("users");
+        SignInButton signInButton = findViewById(R.id.sign_in_button);
 
-        mCallbackManager = CallbackManager.Factory.create();
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progress.setVisibility(View.VISIBLE);
+                switch (v.getId()) {
+                    case R.id.sign_in_button:
+                        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                        startActivityForResult(signInIntent, RC_SIGN_IN);
+                        break;
+                }
+            }
+        });
+
+        // Facebook Sign Up
+
         loginButton = findViewById(R.id.buttonFacebookLogin);
-        loginButton.setReadPermissions("email", "public_profile", "user_gender", "user_birthday", "user_location" , "user_photos");
+        loginButton.setReadPermissions(Arrays.asList("email", "public_profile", "user_friends", "user_likes", "user_gender", "user_birthday", "user_location" , "user_photos"));
+        mCallbackManager = CallbackManager.Factory.create();
 
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
                 progress.setVisibility(View.VISIBLE);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                if (response.getError() != null) {
+                                    // handle error
+                                } else {
+                                        FirebaseUser currentUser = mAuth.getCurrentUser();
+                                        updateUI(currentUser, object);
+                                }
+                            }
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,first_name,last_name,email,gender,birthday,location,photos,likes,friends");
+                request.setParameters(parameters);
+                request.executeAsync();
+
+
+
+               handleFacebookAccessToken(loginResult.getAccessToken());
 
             }
 
@@ -192,27 +175,7 @@ public class  Register extends AppCompatActivity
             }
         });
 
-        TVLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent gotoLogin = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(gotoLogin);
-            }
-        });
-
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
-
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progress.setVisibility(View.VISIBLE);
-                switch (v.getId()) {
-                    case R.id.sign_in_button:
-                        signIn();
-                        break;
-                }
-            }
-        });
+        // Email Sign Up
 
         Button registerSubmit = findViewById(R.id.loginSubmit);
         registerSubmit.setOnClickListener(new View.OnClickListener()
@@ -235,14 +198,19 @@ public class  Register extends AppCompatActivity
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 progress.setVisibility(View.GONE);
-                                Toast.makeText(Register.this, "User account created.",
-                                        Toast.LENGTH_SHORT).show();
-                               // FirebaseUser user = task.getResult().getUser();
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                updateUI(user);
-                            } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                                JSONObject object = new JSONObject();
+                                try {
+                                    object.put("email", Email);
+                                }
+                                catch (Exception e){
+                                    Toast.makeText(Register.this, e.getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    updateUI(user, object);
+                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
                                 progress.setVisibility(View.GONE);
-                                Toast.makeText(Register.this, "User already exists.",
+                                Toast.makeText(Register.this, "User email already registered.",
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 progress.setVisibility(View.GONE);
@@ -282,31 +250,97 @@ public class  Register extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private boolean validateEmail() {
+        EditText EmailEditText = findViewById(R.id.email);
+        String Email = EmailEditText.getText().toString();
+        if (Email.isEmpty()) {
+            EmailEditText.setError("Field can't be empty.");
+            return false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(Email).matches()) {
+            EmailEditText.setError("Please enter a valid email address.");
+            return false;
+        } else {
+            return true;
+        }
     }
 
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+    private boolean validatePW() {
+        EditText PWEditText = findViewById(R.id.pw);
+        String PW = PWEditText.getText().toString();
+        if (PW.isEmpty()) {
+            PWEditText.setError("Field can't be empty.");
+            return false;
+        } else if (!PASSWORD_LETTER.matcher(PW).matches()) {
+            PWEditText.setError("Password must contain at least one letter.");
+            return false;
+        } else if (!PASSWORD_NUMBER.matcher(PW).matches()) {
+            PWEditText.setError("Password must contain at least one digit.");
+            return false;
+        } else if (!PASSWORD_SPACE.matcher(PW).matches()) {
+            PWEditText.setError("Password can't have any spaces.");
+            return false;
+        } else if (!PASSWORD_LENGTH.matcher(PW).matches()) {
+            PWEditText.setError("Password must be at least 8 characters long.");
+            return false;
+        } else {
+            return true;
+        }
     }
 
-    private void updateUI(FirebaseUser currentUser){
+    private boolean confirmPW() {
+        EditText PWEditText = findViewById(R.id.pw);
+        EditText ConfirmPWEditText = findViewById(R.id.confirmpw);
+        String PW = PWEditText.getText().toString();
+        String ConfirmPW = ConfirmPWEditText.getText().toString();
+        if (!PW.equals(ConfirmPW)) {
+            PWEditText.setError("Passwords don't match.");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void updateUI(FirebaseUser currentUser, JSONObject object){
 
 
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference users = database.child("users");
-       // String UID;
-       // String username;
-        //String email;
-        User user;
 
-       // UID = currentUser.getUid();
-       // username = currentUser.getDisplayName();
-      //  email = currentUser.getEmail();
-        user = new User("UID", "username", "email");
-       // users.push().setValue(user);
+        String Object = object.toString();
+        String UID = object.optString("id");
+
+        Query query = users.orderByChild("id").equalTo(UID).limitToFirst(1);
+        query.addValueEventListener (new ValueEventListener() {
+
+            Object User;
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()){
+                    try {
+                        User = new JSONParser().parse(Object);
+                        Toast.makeText(Register.this, "User account created.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    catch (Exception e)
+                    {
+                        User = null;
+                        Toast.makeText(Register.this, e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    users.push().setValue(User);
+                    query.removeEventListener(this);
+                } else {
+                    Toast.makeText(Register.this, "User logged in.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -319,10 +353,35 @@ public class  Register extends AppCompatActivity
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         // Sign in success, update UI with the signed-in user's information
-                        Toast.makeText(Register.this, "User account created.",
-                                Toast.LENGTH_SHORT).show();
+                        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(Register.this);
+                        JSONObject object = new JSONObject();
+                        if (acct != null) {
+                            String Username = acct.getDisplayName();
+                            String FirstName = acct.getGivenName();
+                            String LastName = acct.getFamilyName();
+                            String Email = acct.getEmail();
+                            String Id = acct.getId();
+                            Uri Photo = acct.getPhotoUrl();
+                            try {
+                                object.put("username", Username);
+                                object.put("first_name", FirstName);
+                                object.put("last_name", LastName);
+                                object.put("email", Email);
+                                object.put("id", Id);
+                                object.put("photo", Photo);
+                            }
+                            catch (Exception e){
+                                Toast.makeText(Register.this, "Could not create user.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else{
+                            Toast.makeText(Register.this, "Could not create user.",
+                                    Toast.LENGTH_SHORT).show();
+                            object = null;
+                        }
                         FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
+                        updateUI(user, object);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -347,20 +406,13 @@ public class  Register extends AppCompatActivity
                     .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Toast.makeText(Register.this, "User account created.",
-                                    Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             if (e instanceof FirebaseAuthUserCollisionException){
-                                progress.setVisibility(View.GONE);
-                                Toast.makeText(Register.this, "User already exists.",
-                                        Toast.LENGTH_SHORT).show();
-                            } else {
                                 progress.setVisibility(View.GONE);
                                 Toast.makeText(Register.this, e.getMessage(),
                                         Toast.LENGTH_SHORT).show();

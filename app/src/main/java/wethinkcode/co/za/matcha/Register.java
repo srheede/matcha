@@ -209,9 +209,22 @@ public class  Register extends AppCompatActivity
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     updateUI(user, object);
                                 } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
-                                progress.setVisibility(View.GONE);
-                                Toast.makeText(Register.this, "User email already registered.",
-                                        Toast.LENGTH_SHORT).show();
+                                mAuth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            progress.setVisibility(View.GONE);
+                                            Toast.makeText(Register.this, "User logged in.",
+                                                    Toast.LENGTH_SHORT).show();
+                                            Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                                            startActivity(gotoAccount);
+                                        } else {
+                                            progress.setVisibility(View.GONE);
+                                            Toast.makeText(Register.this, "Account already exists. Please go to login.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                             } else {
                                 progress.setVisibility(View.GONE);
                                 Toast.makeText(Register.this, task.getException().getMessage(),
@@ -371,14 +384,13 @@ public class  Register extends AppCompatActivity
                                 object.put("photo", Photo);
                             }
                             catch (Exception e){
-                                Toast.makeText(Register.this, "Could not create user.",
+                                Toast.makeText(Register.this, e.getMessage(),
                                         Toast.LENGTH_SHORT).show();
                             }
 
                         } else{
                             Toast.makeText(Register.this, "Could not create user.",
                                     Toast.LENGTH_SHORT).show();
-                            object = null;
                         }
                         FirebaseUser user = mAuth.getCurrentUser();
                         updateUI(user, object);

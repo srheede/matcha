@@ -33,6 +33,14 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.simple.parser.JSONParser;
 
 
 public class MainActivity extends AppCompatActivity
@@ -45,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 9001;
     private ProgressBar progress;
     private TextView TVSignUp;
+    private TextView TVForgot;
 
     private boolean validateDetails() {
         EditText EmailEditText = findViewById(R.id.email);
@@ -69,6 +78,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         TVSignUp = (TextView) findViewById(R.id.textViewSignUp);
+        TVForgot = (TextView) findViewById(R.id.textViewForgot);
 
         progress = (ProgressBar)findViewById(R.id.progressBar);
 
@@ -106,6 +116,14 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent gotoRegister = new Intent(getApplicationContext(), Register.class);
+                startActivity(gotoRegister);
+            }
+        });
+
+        TVForgot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent gotoRegister = new Intent(getApplicationContext(), ForgotPW.class);
                 startActivity(gotoRegister);
             }
         });
@@ -200,61 +218,111 @@ public class MainActivity extends AppCompatActivity
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
-        if (true) {
-            mAuth.signInWithCredential(credential)
-                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(MainActivity.this, "User logged in.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MainActivity.this, e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            progress.setVisibility(View.GONE);
-                        }
-                    });
-        } else {
-            FirebaseAuth.getInstance().signOut();
-            LoginManager.getInstance().logOut();
-            Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
-                    Toast.LENGTH_SHORT).show();
-        }
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference users = database.child("users");
+
+        String UID = acct.getId();
+
+        Query query = users.orderByChild("id").equalTo(UID).limitToFirst(1);
+        ValueEventListener event = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+
+
+                    mAuth.signInWithCredential(credential)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    // Sign in success, update UI with the signed-in user's information
+                                    Toast.makeText(MainActivity.this, "User logged in.",
+                                            Toast.LENGTH_SHORT).show();
+                                    Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                                    startActivity(gotoAccount);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(MainActivity.this, e.getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+
+
+                } else {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
+                            Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        query.addListenerForSingleValueEvent (event);
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
 
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                    @Override
-                    public void onSuccess(AuthResult authResult) {
-                        Toast.makeText(MainActivity.this, "User logged in.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                            progress.setVisibility(View.GONE);
-                            Toast.makeText(MainActivity.this, e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progress.setVisibility(View.GONE);
-                    }
-                });
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference users = database.child("users");
+
+        String UID = token.getUserId();
+
+        Query query = users.orderByChild("id").equalTo(UID).limitToFirst(1);
+        ValueEventListener event = new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+                    mAuth.signInWithCredential(credential)
+                            .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    Toast.makeText(MainActivity.this, "User logged in.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    progress.setVisibility(View.GONE);
+                                    Toast.makeText(MainActivity.this, e.getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progress.setVisibility(View.GONE);
+                                }
+                            });
+                } else {
+                    progress.setVisibility(View.GONE);
+                    Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
+                            Toast.LENGTH_SHORT).show();
+                    LoginManager.getInstance().logOut();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
+        query.addListenerForSingleValueEvent (event);
     }
 }

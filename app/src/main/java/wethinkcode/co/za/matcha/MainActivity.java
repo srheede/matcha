@@ -47,13 +47,13 @@ public class MainActivity extends AppCompatActivity
 {
 
     private CallbackManager mCallbackManager;
-    private LoginButton loginButton;
+    LoginButton loginButton;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private ProgressBar progress;
-    private TextView TVSignUp;
-    private TextView TVForgot;
+    TextView TVSignUp;
+    TextView TVForgot;
 
     private boolean validateDetails() {
         EditText EmailEditText = findViewById(R.id.email);

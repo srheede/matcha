@@ -148,8 +148,16 @@ public class  Register extends AppCompatActivity
                                 if (response.getError() != null) {
                                     // handle error
                                 } else {
-                                        FirebaseUser currentUser = mAuth.getCurrentUser();
-                                        updateUI(currentUser, object);
+                                    try {
+                                        object.put("platform", "facebook");
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Toast.makeText(Register.this, e.getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                    handleFacebookAccessToken(loginResult.getAccessToken(), object);
+                                    FirebaseUser currentUser = mAuth.getCurrentUser();
                                 }
                             }
                         });
@@ -160,7 +168,6 @@ public class  Register extends AppCompatActivity
 
 
 
-               handleFacebookAccessToken(loginResult.getAccessToken());
 
             }
 
@@ -197,9 +204,9 @@ public class  Register extends AppCompatActivity
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                progress.setVisibility(View.GONE);
                                 JSONObject object = new JSONObject();
                                 try {
+                                    object.put("platform", "email");
                                     object.put("email", Email);
                                 }
                                 catch (Exception e){
@@ -208,7 +215,8 @@ public class  Register extends AppCompatActivity
                                 }
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     updateUI(user, object);
-                                } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
+                                progress.setVisibility(View.GONE);
+                            } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
                                 mAuth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -227,7 +235,7 @@ public class  Register extends AppCompatActivity
                                 });
                             } else {
                                 progress.setVisibility(View.GONE);
-                                Toast.makeText(Register.this, task.getException().getMessage(),
+                                Toast.makeText(Register.this, "Authentication Failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -319,10 +327,21 @@ public class  Register extends AppCompatActivity
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
         DatabaseReference users = database.child("users");
 
-        String Object = object.toString();
-        String UID = object.optString("id");
+        String User;
 
-        Query query = users.orderByChild("id").equalTo(UID).limitToFirst(1);
+        User = currentUser.getUid();
+
+        try {
+            object.putOpt("firebaseID", User);
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(Register.this, e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+        String Object = object.toString();
+
+        Query query = users.orderByChild("firebaseID").equalTo(User).limitToFirst(1);
         query.addValueEventListener (new ValueEventListener() {
 
             Object User;
@@ -376,6 +395,7 @@ public class  Register extends AppCompatActivity
                             String Id = acct.getId();
                             Uri Photo = acct.getPhotoUrl();
                             try {
+                                object.put("platform", "google");
                                 object.put("username", Username);
                                 object.put("first_name", FirstName);
                                 object.put("last_name", LastName);
@@ -411,7 +431,7 @@ public class  Register extends AppCompatActivity
                 });
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
+    private void handleFacebookAccessToken(AccessToken token, JSONObject object) {
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
             mAuth.signInWithCredential(credential)
@@ -419,6 +439,7 @@ public class  Register extends AppCompatActivity
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user, object);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

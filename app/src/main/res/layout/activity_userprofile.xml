@@ -88,26 +88,26 @@
             android:layout_height="30dp"/>
 
         <EditText
-            android:id="@+id/editTextName"
+            android:id="@+id/editTextFirstName"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name" />
+            android:text="First Name" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
         <EditText
-            android:id="@+id/editTextSurname"
+            android:id="@+id/editTextLastName"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Surname" />
+            android:text="Last Name" />
 
         <Space
             android:layout_width="match_parent"

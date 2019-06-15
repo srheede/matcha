@@ -1,5 +1,7 @@
 package wethinkcode.co.za.matcha;
 
+import android.net.Uri;
+
 public class User {
 
     String firebaseID;
@@ -12,13 +14,25 @@ public class User {
     String sexPref;
     String bio;
     String interests[];
-    String profPic;
+    Uri profPic;
     String pics[] = new String[4];
     String location;
 
     public User(){
 
     };
+
+    public String[] getInterests() {
+        return interests;
+    }
+
+    public Uri getProfPic() {
+        return profPic;
+    }
+
+    public void setProfPic(Uri profPic) {
+        this.profPic = profPic;
+    }
 
     public void setInterests(String[] interests) {
         this.interests = interests;
@@ -102,14 +116,6 @@ public class User {
 
     public void setBio(String bio) {
         this.bio = bio;
-    }
-
-    public String getProfPic() {
-        return profPic;
-    }
-
-    public void setProfPic(String profPic) {
-        this.profPic = profPic;
     }
 
     public String getLocation() {

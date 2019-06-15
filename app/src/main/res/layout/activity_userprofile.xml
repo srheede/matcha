@@ -93,8 +93,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="First Name" />
+            android:hint="First Name"
+            android:inputType="textPersonName" />
 
         <Space
             android:layout_width="match_parent"
@@ -106,8 +106,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Last Name" />
+            android:hint="Last Name"
+            android:inputType="textPersonName" />
 
         <Space
             android:layout_width="match_parent"
@@ -119,21 +119,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Username" />
+            android:hint="Username"
+            android:inputType="textPersonName" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:layout_gravity="center"
-                android:inputType="textEmailAddress"
-                android:text="Email Address" />
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:ems="10"
+            android:hint="Email Address"
+            android:inputType="textEmailAddress" />
 
             <Space
                 android:layout_width="match_parent"
@@ -262,7 +262,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:text="Biography"
+            android:hint="Biography"
             android:inputType="textMultiLine" />
 
         <Space
@@ -276,7 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:ems="10"
-            android:text="Interests"
+            android:hint="Interests"
             android:inputType="textMultiLine" />
 
         <Space

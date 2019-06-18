@@ -222,31 +222,38 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         // Sign in success, update UI with the signed-in user's information
-                        String firebaseID = mAuth.getCurrentUser().getUid();
-                        Query query = users.orderByKey().equalTo(firebaseID);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    progress.setVisibility(View.GONE);
-                                    Toast.makeText(MainActivity.this, "User logged in.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
-                                    startActivity(gotoAccount);
-                                } else {
-                                    progress.setVisibility(View.GONE);
-                                    Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
-                                            Toast.LENGTH_SHORT).show();
-                                    FirebaseAuth.getInstance().signOut();
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            String firebaseID = mAuth.getCurrentUser().getUid();
+                            Query query = users.orderByKey().equalTo(firebaseID);
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        progress.setVisibility(View.GONE);
+                                        Toast.makeText(MainActivity.this, "User logged in.",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                                        startActivity(gotoAccount);
+                                    } else {
+                                        progress.setVisibility(View.GONE);
+                                        Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
+                                                Toast.LENGTH_SHORT).show();
+                                        FirebaseAuth.getInstance().signOut();
+                                    }
+
                                 }
 
-                            }
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                            }
-                        });
+                                }
+                            });
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "User not found in firebaseAuthWithGoogle.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -261,30 +268,37 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         // Sign in success, update UI with the signed-in user's information
-                        String firebaseID = mAuth.getCurrentUser().getUid();
-                        Query query = users.orderByKey().equalTo(firebaseID);
-                        query.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    progress.setVisibility(View.GONE);
-                                    Toast.makeText(MainActivity.this, "User logged in.",
-                                            Toast.LENGTH_SHORT).show();
-                                    Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
-                                    startActivity(gotoAccount);
-                                } else {
-                                    progress.setVisibility(View.GONE);
-                                    Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
-                                            Toast.LENGTH_SHORT).show();
-                                    LoginManager.getInstance().logOut();
+                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            String firebaseID = mAuth.getCurrentUser().getUid();
+                            Query query = users.orderByKey().equalTo(firebaseID);
+                            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        progress.setVisibility(View.GONE);
+                                        Toast.makeText(MainActivity.this, "User logged in.",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                                        startActivity(gotoAccount);
+                                    } else {
+                                        progress.setVisibility(View.GONE);
+                                        Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
+                                                Toast.LENGTH_SHORT).show();
+                                        LoginManager.getInstance().logOut();
+                                    }
                                 }
-                            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
+                        else {
+                            Toast.makeText(MainActivity.this, "User not found in handleFacebookAccessToken.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }

@@ -62,12 +62,12 @@ public class  Register extends AppCompatActivity
     private static final Pattern PASSWORD_LETTER = Pattern.compile("^(?=.*[a-zA-Z]).{2,}$");
     private static final Pattern PASSWORD_SPACE = Pattern.compile("^(?=\\S+$).{2,}$");
     private CallbackManager mCallbackManager;
-    private LoginButton loginButton;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private ProgressBar progress;
-    private TextView TVLogin;
+    LoginButton loginButton;
+    TextView TVLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -204,7 +204,13 @@ public class  Register extends AppCompatActivity
                                             Toast.LENGTH_SHORT).show();
                                 }
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                if (user != null) {
                                     updateUI(user, object);
+                                }
+                                else {
+                                    Toast.makeText(Register.this, "User not found in registerSubmit.setOnClickListener.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                                 progress.setVisibility(View.GONE);
                             } else if (task.getException() instanceof FirebaseAuthUserCollisionException){
                                 mAuth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -391,7 +397,13 @@ public class  Register extends AppCompatActivity
                                     Toast.LENGTH_SHORT).show();
                         }
                         FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user, object);
+                        if (user != null) {
+                            updateUI(user, object);
+                        }
+                        else {
+                            Toast.makeText(Register.this, "User not found in firebaseAuthWithGoogle.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -417,7 +429,13 @@ public class  Register extends AppCompatActivity
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user, object);
+                            if (user != null) {
+                                updateUI(user, object);
+                            }
+                            else {
+                                Toast.makeText(Register.this, "User not found in handleFacebookAccessToken.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

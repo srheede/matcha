@@ -46,9 +46,9 @@ public class UserProfile extends AppCompatActivity {
     private ImageView profPic;
     final static int Gallery_Pick = 1;
     private StorageReference UserProfileImageRef;
+    DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
 
-
-    private FirebaseAuth.AuthStateListener mAuthlistener = new FirebaseAuth.AuthStateListener() {
+    private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
@@ -100,11 +100,9 @@ public class UserProfile extends AppCompatActivity {
 
             Uri ImageUri = data.getData();
 
-            String User;
+            String firebaseID = mAuth.getCurrentUser().getUid();
 
-            User = mAuth.getCurrentUser().getUid();
-
-            StorageReference filePath = UserProfileImageRef.child(User + ".jpg");
+            StorageReference filePath = UserProfileImageRef.child(firebaseID + ".jpg");
 
             filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -115,28 +113,7 @@ public class UserProfile extends AppCompatActivity {
                         getDownloadUrl.addOnSuccessListener(new OnSuccessListener() {
                             @Override
                             public void onSuccess(Object o) {
-
-                                DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-                                DatabaseReference users = database.child("users");
-
-                                Query query = users.orderByChild("firebaseID").equalTo(User).limitToFirst(1);
-                                query.addValueEventListener (new ValueEventListener() {
-
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                        for(DataSnapshot data : dataSnapshot.getChildren()) {
-
-                                            //data.child("profPic").push().setValue(Uri.parse(o.toString()));
-                                            query.removeEventListener(this);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
+                                users.child(firebaseID).child("profPic").setValue(o.toString());
                             }
                         });
                     }
@@ -148,26 +125,35 @@ public class UserProfile extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        mAuth.addAuthStateListener(mAuthlistener);
+        mAuth.addAuthStateListener(mAuthListener);
+        updateDB();
         updateUI();
     }
 
+    private void updateDB(){
+        String firebaseID = mAuth.getCurrentUser().getUid();
+        Query query = users.orderByKey().equalTo(firebaseID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                User user = fetchData(dataSnapshot);
+                users.child(firebaseID).setValue(user);
+                fillForm(user);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void updateUI(){
+        String firebaseID = mAuth.getCurrentUser().getUid();
+        Query query = users.orderByKey().equalTo(firebaseID);
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String UID;
-
-        if (currentUser != null) {
-            UID = currentUser.getUid();
-        }
-        else{
-            UID = null;
-        }
-
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference users = database.child("users");
-
-        Query query = users.orderByChild("firebaseID").equalTo(UID).limitToFirst(1);
         query.addValueEventListener (new ValueEventListener() {
 
             @Override
@@ -203,50 +189,73 @@ public class UserProfile extends AppCompatActivity {
         username.setText(user.getUsername());
         bio.setText(user.getBio());
         email.setText(user.getEmail());
-        Picasso.with(this).load(user.getProfPic()).into(profPic);
-
+        if (!user.getProfPic().isEmpty()) {
+            Picasso.with(this).load(user.getProfPic()).into(profPic);
+        }
     }
 
-    private User fetchData(DataSnapshot dataSnapshot)
-    {
+    private User fetchData(DataSnapshot dataSnapshot) {
         User user = new User();
 
-        for(DataSnapshot data : dataSnapshot.getChildren()) {
+        for (DataSnapshot data : dataSnapshot.getChildren()) {
             String platform = data.child("platform").getValue(String.class);
-            if(platform != null) {
-                if (platform.equals("email")) {
+            switch (platform) {
+                case "email":
                     user.setEmail(data.child("email").getValue(String.class));
-                    user.setFirebaseID(data.child("firebaseID").getValue(String.class));
-                } else if (platform.equals("google")) {
+                    user.setGender("");
+                    user.setUsername("");
+                    user.setProfPic("");
+                    user.setFirstName("");
+                    user.setBio("");
+                    user.setBirthDate("");
+                    user.setInterests("");
+                    user.setLastName("");
+                    user.setLocation("");
+                    user.setPics("");
+                    user.setSexPref("");
+                    break;
+                case "google":
                     user.setEmail(data.child("email").getValue(String.class));
-                    user.setFirebaseID(data.child("firebaseID").getValue(String.class));
                     user.setFirstName(data.child("first_name").getValue(String.class));
-                    Uri profPic = Uri.parse(data.child("photo").getValue(String.class));
-                    user.setProfPic(profPic);
+                    user.setProfPic(data.child("photo").getValue(String.class));
                     user.setUsername(data.child("username").getValue(String.class));
-                } else if (platform.equals("facebook")) {
+                    user.setGender("");
+                    user.setBio("");
+                    user.setBirthDate("");
+                    user.setInterests("");
+                    user.setLastName("");
+                    user.setLocation("");
+                    user.setPics("");
+                    user.setSexPref("");
+                    break;
+                case "facebook":
                     user.setEmail(data.child("email").getValue(String.class));
-                    user.setFirebaseID(data.child("firebaseID").getValue(String.class));
                     user.setBirthDate(data.child("birthday").getValue(String.class));
                     user.setFirstName(data.child("first_name").getValue(String.class));
                     user.setGender(data.child("gender").getValue(String.class));
                     user.setLastName(data.child("last_name").getValue(String.class));
-                } else if (platform.equals("matcha")) {
+                    user.setUsername("");
+                    user.setProfPic("");
+                    user.setBio("");
+                    user.setInterests("");
+                    user.setLocation("");
+                    user.setPics("");
+                    user.setSexPref("");
+                    break;
+                case "matcha":
                     user.setGender(data.child("gender").getValue(String.class));
                     user.setUsername(data.child("username").getValue(String.class));
-                    Uri profPic = Uri.parse(data.child("profPic").getValue(String.class));
-                    user.setProfPic(profPic);
+                    user.setProfPic(data.child("profPic").getValue(String.class));
                     user.setFirstName(data.child("firstName").getValue(String.class));
-                    user.setFirebaseID(data.child("firebaseID").getValue(String.class));
                     user.setEmail(data.child("email").getValue(String.class));
                     user.setBio(data.child("bio").getValue(String.class));
                     user.setBirthDate(data.child("birthDate").getValue(String.class));
-                    user.setInterests(data.child("interests").getValue(String[].class));
+                    user.setInterests(data.child("interests").getValue(String.class));
                     user.setLastName(data.child("lastName").getValue(String.class));
                     user.setLocation(data.child("location").getValue(String.class));
-                    user.setPics(data.child("pics").getValue(String[].class));
+                    user.setPics(data.child("pics").getValue(String.class));
                     user.setSexPref(data.child("sexPref").getValue(String.class));
-                }
+                    break;
             }
         }
         return (user);

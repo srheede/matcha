@@ -4,45 +4,49 @@ import android.net.Uri;
 
 public class User {
 
-    String firebaseID;
-    String username;
-    String firstName;
-    String lastName;
-    String email;
-    String gender;
-    String birthDate;
-    String sexPref;
-    String bio;
-    String interests[];
-    Uri profPic;
-    String pics[] = new String[4];
-    String location;
+    private String  platform;
+    private String  username;
+    private String  firstName;
+    private String  lastName;
+    private String  email;
+    private String  gender;
+    private String  birthDate;
+    private String  sexPref;
+    private String  bio;
+    private String  interests;
+    private String  profPic;
+    private String  pics;
+    private String  location;
 
     public User(){
-
+        platform = "matcha";
     };
 
-    public String[] getInterests() {
+    public String getPlatform() {
+        return platform;
+    }
+
+    public String getInterests() {
         return interests;
     }
 
-    public Uri getProfPic() {
+    public String getProfPic() {
         return profPic;
     }
 
-    public void setProfPic(Uri profPic) {
+    public void setProfPic(String profPic) {
         this.profPic = profPic;
     }
 
-    public void setInterests(String[] interests) {
+    public void setInterests(String interests) {
         this.interests = interests;
     }
 
-    public String[] getPics() {
+    public String getPics() {
         return pics;
     }
 
-    public void setPics(String[] pics) {
+    public void setPics(String pics) {
         this.pics = pics;
     }
 
@@ -62,20 +66,12 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public void setFirebaseID(String firebaseID) {
-        this.firebaseID = firebaseID;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getFirebaseID() {
-        return firebaseID;
     }
 
     public String getUsername() {

@@ -95,16 +95,6 @@ public class  Register extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {
-                    Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
-                    startActivity(gotoAccount);
-                }
-            }
-        });
-
         // Google Sign Up
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -323,26 +313,12 @@ public class  Register extends AppCompatActivity
 
     private void updateUI(FirebaseUser currentUser, JSONObject object){
 
-
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference users = database.child("users");
-
-        String User;
-
-        User = currentUser.getUid();
-
-        try {
-            object.putOpt("firebaseID", User);
-        }
-        catch (Exception e)
-        {
-            Toast.makeText(Register.this, e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
-        }
+        DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
+        String firebaseID = currentUser.getUid();
         String Object = object.toString();
 
-        Query query = users.orderByChild("firebaseID").equalTo(User).limitToFirst(1);
-        query.addValueEventListener (new ValueEventListener() {
+        Query query = users.child(firebaseID);
+        query.addListenerForSingleValueEvent (new ValueEventListener() {
 
             Object User;
 
@@ -351,18 +327,19 @@ public class  Register extends AppCompatActivity
                 if (!dataSnapshot.exists()){
                     try {
                         User = new JSONParser().parse(Object);
+                        users.child(firebaseID).setValue(User);
+                        progress.setVisibility(View.GONE);
                         Toast.makeText(Register.this, "User account created.",
                                 Toast.LENGTH_SHORT).show();
                     }
                     catch (Exception e)
                     {
-                        User = null;
+                        progress.setVisibility(View.GONE);
                         Toast.makeText(Register.this, e.getMessage(),
                                 Toast.LENGTH_SHORT).show();
                     }
-                    users.push().setValue(User);
-                    query.removeEventListener(this);
                 } else {
+                    progress.setVisibility(View.GONE);
                     Toast.makeText(Register.this, "User logged in.",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -373,7 +350,8 @@ public class  Register extends AppCompatActivity
 
             }
         });
-
+        Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+        startActivity(gotoAccount);
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {

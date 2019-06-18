@@ -15,12 +15,57 @@ public class User {
     private String  bio;
     private String  interests;
     private String  profPic;
-    private String  pics;
+    private String  pic2;
+    private String  pic3;
+    private String  pic4;
+    private String  pic5;
     private String  location;
+    private String  notifications;
 
     public User(){
         platform = "matcha";
+        notifications = "yes";
     };
+
+    public String getPic2() {
+        return pic2;
+    }
+
+    public void setPic2(String pic2) {
+        this.pic2 = pic2;
+    }
+
+    public String getPic3() {
+        return pic3;
+    }
+
+    public void setPic3(String pic3) {
+        this.pic3 = pic3;
+    }
+
+    public String getPic4() {
+        return pic4;
+    }
+
+    public void setPic4(String pic4) {
+        this.pic4 = pic4;
+    }
+
+    public String getPic5() {
+        return pic5;
+    }
+
+    public void setPic5(String pic5) {
+        this.pic5 = pic5;
+    }
+
+    public String getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(String notifications) {
+        this.notifications = notifications;
+    }
 
     public String getPlatform() {
         return platform;
@@ -40,14 +85,6 @@ public class User {
 
     public void setInterests(String interests) {
         this.interests = interests;
-    }
-
-    public String getPics() {
-        return pics;
-    }
-
-    public void setPics(String pics) {
-        this.pics = pics;
     }
 
     public String getLastName() {

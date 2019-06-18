@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,18 +48,32 @@ public class UserProfile extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     final static int Gallery_Pick = 1;
+    final static int Gallery_Pick2 = 2;
+    final static int Gallery_Pick3 = 3;
+    final static int Gallery_Pick4 = 4;
+    final static int Gallery_Pick5 = 5;
     private StorageReference UserProfileImageRef;
     ImageView profPic;
     String profPicUri;
+    ImageView pic2;
+    String pic2Uri;
+    ImageView pic3;
+    String pic3Uri;
+    ImageView pic4;
+    String pic4Uri;
+    ImageView pic5;
+    String pic5Uri;
     RadioGroup radioGender;
+    RadioButton buttonGender;
     RadioGroup radioInterestedIn;
+    RadioButton buttonInterestedIn;
     DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-            if (firebaseAuth.getCurrentUser() == null){
+            if (firebaseAuth.getCurrentUser() == null) {
                 Intent gotoLogout = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(gotoLogout);
             }
@@ -79,6 +94,16 @@ public class UserProfile extends AppCompatActivity {
         UserProfileImageRef = FirebaseStorage.getInstance().getReference().child("ProfileImages");
 
         profPic = findViewById(R.id.ImageViewProf);
+        pic2 = findViewById(R.id.imageView2);
+        pic3 = findViewById(R.id.imageView3);
+        pic4 = findViewById(R.id.imageView4);
+        pic5 = findViewById(R.id.imageView5);
+
+        int interestedInID = radioInterestedIn.getCheckedRadioButtonId();
+        int genderID = radioGender.getCheckedRadioButtonId();
+
+        buttonInterestedIn = findViewById(interestedInID);
+        buttonGender = findViewById(genderID);
 
         buttonSave = findViewById(R.id.buttonSave);
 
@@ -91,6 +116,42 @@ public class UserProfile extends AppCompatActivity {
                 uploadImage.setAction(Intent.ACTION_GET_CONTENT);
                 uploadImage.setType("image/*");
                 startActivityForResult(uploadImage, Gallery_Pick);
+            }
+        });
+        pic2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent uploadImage = new Intent();
+                uploadImage.setAction(Intent.ACTION_GET_CONTENT);
+                uploadImage.setType("image/*");
+                startActivityForResult(uploadImage, Gallery_Pick2);
+            }
+        });
+        pic3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent uploadImage = new Intent();
+                uploadImage.setAction(Intent.ACTION_GET_CONTENT);
+                uploadImage.setType("image/*");
+                startActivityForResult(uploadImage, Gallery_Pick3);
+            }
+        });
+        pic4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent uploadImage = new Intent();
+                uploadImage.setAction(Intent.ACTION_GET_CONTENT);
+                uploadImage.setType("image/*");
+                startActivityForResult(uploadImage, Gallery_Pick4);
+            }
+        });
+        pic5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent uploadImage = new Intent();
+                uploadImage.setAction(Intent.ACTION_GET_CONTENT);
+                uploadImage.setType("image/*");
+                startActivityForResult(uploadImage, Gallery_Pick5);
             }
         });
 
@@ -144,91 +205,211 @@ public class UserProfile extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         }
+        if (requestCode == Gallery_Pick2 && resultCode == RESULT_OK && data != null) {
+
+            Uri ImageUri = data.getData();
+
+            String firebaseID = mAuth.getCurrentUser().getUid();
+
+            StorageReference filePath = UserProfileImageRef.child(firebaseID + "2.jpg");
+
+            try {
+                filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Task getDownloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl();
+                            getDownloadUrl.addOnSuccessListener(new OnSuccessListener() {
+                                @Override
+                                public void onSuccess(Object o) {
+                                    pic2Uri = o.toString();
+                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic2);
+                                }
+                            });
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                Toast.makeText(UserProfile.this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == Gallery_Pick3 && resultCode == RESULT_OK && data != null) {
+
+            Uri ImageUri = data.getData();
+
+            String firebaseID = mAuth.getCurrentUser().getUid();
+
+            StorageReference filePath = UserProfileImageRef.child(firebaseID + "3.jpg");
+
+            try {
+                filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Task getDownloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl();
+                            getDownloadUrl.addOnSuccessListener(new OnSuccessListener() {
+                                @Override
+                                public void onSuccess(Object o) {
+                                    pic3Uri = o.toString();
+                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic3);
+                                }
+                            });
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                Toast.makeText(UserProfile.this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == Gallery_Pick4 && resultCode == RESULT_OK && data != null) {
+
+            Uri ImageUri = data.getData();
+
+            String firebaseID = mAuth.getCurrentUser().getUid();
+
+            StorageReference filePath = UserProfileImageRef.child(firebaseID + "4.jpg");
+
+            try {
+                filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Task getDownloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl();
+                            getDownloadUrl.addOnSuccessListener(new OnSuccessListener() {
+                                @Override
+                                public void onSuccess(Object o) {
+                                    pic4Uri = o.toString();
+                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic4);
+                                }
+                            });
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                Toast.makeText(UserProfile.this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (requestCode == Gallery_Pick5 && resultCode == RESULT_OK && data != null) {
+
+            Uri ImageUri = data.getData();
+
+            String firebaseID = mAuth.getCurrentUser().getUid();
+
+            StorageReference filePath = UserProfileImageRef.child(firebaseID + "5.jpg");
+
+            try {
+                filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Task getDownloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl();
+                            getDownloadUrl.addOnSuccessListener(new OnSuccessListener() {
+                                @Override
+                                public void onSuccess(Object o) {
+                                    pic5Uri = o.toString();
+                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic5);
+                                }
+                            });
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                Toast.makeText(UserProfile.this, e.getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
         updateDB();
     }
 
-    private void saveUI(){
+    public void interestedInClick(View view) {
+        int interestedInID = radioInterestedIn.getCheckedRadioButtonId();
+
+        buttonInterestedIn = findViewById(interestedInID);
+    }
+
+    public void genderClick(View view) {
+        int genderID = radioGender.getCheckedRadioButtonId();
+
+        buttonGender = findViewById(genderID);
+
+    }
+
+    private void saveUI() {
 
         EditText editTextFirstName = findViewById(R.id.editTextFirstName);
         EditText editTextLastName = findViewById(R.id.editTextLastName);
         EditText editTextBio = findViewById(R.id.editTextBio);
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextUsername = findViewById(R.id.editTextUsername);
+        EditText editTextInterests = findViewById(R.id.editTextInterests);
+        Switch switchNotifications = findViewById(R.id.switchNotifications);
 
         String firstName = editTextFirstName.getText().toString();
         String lastName = editTextLastName.getText().toString();
         String bio = editTextBio.getText().toString();
         String email = editTextEmail.getText().toString();
         String username = editTextUsername.getText().toString();
-        int gender = radioGender.getCheckedRadioButtonId();
-        int interestedIn = radioInterestedIn.getCheckedRadioButtonId();
-        System.out.println("test");
-        System.out.println(interestedIn);
-        String Gender;
-        if (gender == 2131230902) {
-            Gender = "male";
+        String interests = editTextInterests.getText().toString();
+
+        if (username.isEmpty()) {
+            editTextUsername.setError("Field can't be empty.");
+        } else if (email.isEmpty()) {
+            editTextEmail.setError("Field can't be empty.");
         } else {
-            Gender = "female";
-        }
-        String sexPref;
-        switch (interestedIn) {
-            case 2131230902 :
-                sexPref = "men";
-                break;
-            case 2131230900 :
-                sexPref = "women";
-                break;
-            case 2131230899 :
-                sexPref = "both";
-                break;
-            default :
-                sexPref = "";
-                break;
-        }
 
+            String gender = buttonGender.getText().toString();
+            String sexPref = buttonInterestedIn.getText().toString();
+            String notifications;
 
+            if (switchNotifications.isChecked()) {
+                notifications = "yes";
+            } else {
+                notifications = "no";
+            }
 
-        User user = new User();
+            User user = new User();
 
-        user.setFirstName(firstName);
-        user.setSexPref(sexPref);
-        user.setLocation("");
-        user.setLastName(lastName);
-        user.setInterests("");
-        user.setBirthDate("");
-        user.setBio(bio);
-        user.setEmail(email);
-        user.setGender(Gender);
-        user.setUsername(username);
-        if (profPicUri.isEmpty())
-        {
-            user.setProfPic("");
-        }
-        else {
+            user.setFirstName(firstName);
+            user.setSexPref(sexPref);
+            user.setLocation("");
+            user.setLastName(lastName);
+            user.setInterests(interests);
+            user.setBirthDate("");
+            user.setBio(bio);
+            user.setEmail(email);
+            user.setGender(gender);
+            user.setUsername(username);
             user.setProfPic(profPicUri);
-        }
-        user.setPics("");
+            user.setPic2(pic2Uri);
+            user.setPic3(pic3Uri);
+            user.setPic4(pic4Uri);
+            user.setPic5(pic5Uri);
+            user.setNotifications(notifications);
 
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            String firebaseID = mAuth.getCurrentUser().getUid();
-            users.child(firebaseID).setValue(user);
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+            if (firebaseUser != null) {
+                String firebaseID = mAuth.getCurrentUser().getUid();
+                users.child(firebaseID).setValue(user);
+            }
         }
     }
 
-    private void updateDB(){
+    private void updateDB() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
             String firebaseID = mAuth.getCurrentUser().getUid();
             Query query = users.child(firebaseID);
 
-            query.addValueEventListener (new ValueEventListener() {
+            query.addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -246,14 +427,13 @@ public class UserProfile extends AppCompatActivity {
 
                 }
             });
-        }
-        else {
+        } else {
             Toast.makeText(UserProfile.this, "User not found in updateUI.",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateUI(){
+    private void updateUI() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
             String firebaseID = mAuth.getCurrentUser().getUid();
@@ -272,18 +452,16 @@ public class UserProfile extends AppCompatActivity {
 
                 }
             });
-        }
-        else {
+        } else {
             Toast.makeText(UserProfile.this, "User not found in updateUI.",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void fillForm(User user)
-    {
+    private void fillForm(User user) {
         EditText firstName = findViewById(R.id.editTextFirstName);
         EditText bio = findViewById(R.id.editTextBio);
-       // EditText interests = findViewById(R.id.editTextInterests);
+        EditText interests = findViewById(R.id.editTextInterests);
         EditText lastName = findViewById(R.id.editTextLastName);
         EditText username = findViewById(R.id.editTextUsername);
         EditText email = findViewById(R.id.editTextEmail);
@@ -293,117 +471,142 @@ public class UserProfile extends AppCompatActivity {
         RadioButton men = findViewById(R.id.radioMen);
         RadioButton women = findViewById(R.id.radioWomen);
         RadioButton both = findViewById(R.id.radioBoth);
-       /* ImageView pic2 = findViewById(R.id.imageView2);
+        Switch notifications = findViewById(R.id.switchNotifications);
+        ImageView pic2 = findViewById(R.id.imageView2);
         ImageView pic3 = findViewById(R.id.imageView3);
         ImageView pic4 = findViewById(R.id.imageView4);
-        ImageView pic5 = findViewById(R.id.imageView5);*/
+        ImageView pic5 = findViewById(R.id.imageView5);
 
         firstName.setText(user.getFirstName());
         lastName.setText(user.getLastName());
         username.setText(user.getUsername());
         bio.setText(user.getBio());
         email.setText(user.getEmail());
+        interests.setText(user.getInterests());
         if (!user.getProfPic().isEmpty()) {
             Picasso.with(this).load(user.getProfPic()).into(profPic);
+            profPicUri = user.getProfPic();
+        } else {
+            profPicUri = "";
         }
-        if (user.getGender().equals("male")){
+        if (!user.getPic2().isEmpty()) {
+            Picasso.with(this).load(user.getPic2()).into(pic2);
+            pic2Uri = user.getPic2();
+        } else {
+            pic2Uri = "";
+        }
+        if (!user.getPic3().isEmpty()) {
+            Picasso.with(this).load(user.getPic3()).into(pic3);
+            pic3Uri = user.getPic3();
+        } else {
+            pic3Uri = "";
+        }
+        if (!user.getPic4().isEmpty()) {
+            Picasso.with(this).load(user.getPic4()).into(pic4);
+            pic4Uri = user.getPic4();
+        } else {
+            pic4Uri = "";
+        }
+        if (!user.getPic5().isEmpty()) {
+            Picasso.with(this).load(user.getPic5()).into(pic5);
+            pic5Uri = user.getPic5();
+        } else {
+            pic5Uri = "";
+        }
+        if (user.getGender().equalsIgnoreCase("male")) {
             male.toggle();
         }
-        if (user.getGender().equals("female")){
+        if (user.getGender().equalsIgnoreCase("female")) {
             female.toggle();
         }
-        if (user.getSexPref().equals("men")){
+        if (user.getSexPref().equalsIgnoreCase("men")) {
             men.toggle();
         }
-        if (user.getSexPref().equals("women")){
+        if (user.getSexPref().equalsIgnoreCase("women")) {
             women.toggle();
         }
-        if (user.getSexPref().equals("both")){
+        if (user.getSexPref().equalsIgnoreCase("both")) {
             both.toggle();
+        }
+        if (user.getNotifications().equals("yes")) {
+            notifications.setChecked(true);
         }
     }
 
     private User fetchData(DataSnapshot data) {
         User user = new User();
-            String platform = data.child("platform").getValue(String.class);
-                switch (platform) {
-                    case "email":
-                        user.setEmail(data.child("email").getValue(String.class));
-                        user.setGender("");
-                        user.setUsername("");
-                        user.setProfPic("");
-                        user.setFirstName("");
-                        user.setBio("");
-                        user.setBirthDate("");
-                        user.setInterests("");
-                        user.setLastName("");
-                        user.setLocation("");
-                        user.setPics("");
-                        user.setSexPref("");
-                        break;
-                    case "google":
-                        user.setEmail(data.child("email").getValue(String.class));
-                        user.setFirstName(data.child("first_name").getValue(String.class));
-                        user.setProfPic(data.child("photo").getValue(String.class));
-                        user.setUsername(data.child("username").getValue(String.class));
-                        user.setGender("");
-                        user.setBio("");
-                        user.setBirthDate("");
-                        user.setInterests("");
-                        user.setLastName("");
-                        user.setLocation("");
-                        user.setPics("");
-                        user.setSexPref("");
-                        break;
-                    case "facebook":
-                        user.setEmail(data.child("email").getValue(String.class));
-                        user.setBirthDate(data.child("birthday").getValue(String.class));
-                        user.setFirstName(data.child("first_name").getValue(String.class));
-                        user.setGender(data.child("gender").getValue(String.class));
-                        user.setLastName(data.child("last_name").getValue(String.class));
-                        user.setUsername("");
-                        user.setProfPic("");
-                        user.setBio("");
-                        user.setInterests("");
-                        user.setLocation("");
-                        user.setPics("");
-                        user.setSexPref("");
-                        break;
-                    case "matcha":
-                        user.setGender(data.child("gender").getValue(String.class));
-                        user.setUsername(data.child("username").getValue(String.class));
-                        user.setProfPic(data.child("profPic").getValue(String.class));
-                        user.setFirstName(data.child("firstName").getValue(String.class));
-                        user.setEmail(data.child("email").getValue(String.class));
-                        user.setBio(data.child("bio").getValue(String.class));
-                        user.setBirthDate(data.child("birthDate").getValue(String.class));
-                        user.setInterests(data.child("interests").getValue(String.class));
-                        user.setLastName(data.child("lastName").getValue(String.class));
-                        user.setLocation(data.child("location").getValue(String.class));
-                        user.setPics(data.child("pics").getValue(String.class));
-                        user.setSexPref(data.child("sexPref").getValue(String.class));
-                        break;
-                }
+        String platform = data.child("platform").getValue(String.class);
+        switch (platform) {
+            case "email":
+                user.setEmail(data.child("email").getValue(String.class));
+                user.setGender("");
+                user.setUsername("");
+                user.setProfPic("");
+                user.setFirstName("");
+                user.setBio("");
+                user.setBirthDate("");
+                user.setInterests("");
+                user.setLastName("");
+                user.setLocation("");
+                user.setPic2("");
+                user.setPic3("");
+                user.setPic4("");
+                user.setPic5("");
+                user.setSexPref("");
+                break;
+            case "google":
+                user.setEmail(data.child("email").getValue(String.class));
+                user.setFirstName(data.child("first_name").getValue(String.class));
+                user.setProfPic(data.child("photo").getValue(String.class));
+                user.setUsername(data.child("username").getValue(String.class));
+                user.setGender("");
+                user.setBio("");
+                user.setBirthDate("");
+                user.setInterests("");
+                user.setLastName("");
+                user.setLocation("");
+                user.setPic2("");
+                user.setPic3("");
+                user.setPic4("");
+                user.setPic5("");
+                user.setSexPref("");
+                break;
+            case "facebook":
+                user.setEmail(data.child("email").getValue(String.class));
+                user.setBirthDate(data.child("birthday").getValue(String.class));
+                user.setFirstName(data.child("first_name").getValue(String.class));
+                user.setGender(data.child("gender").getValue(String.class));
+                user.setLastName(data.child("last_name").getValue(String.class));
+                user.setUsername("");
+                user.setProfPic("");
+                user.setBio("");
+                user.setInterests("");
+                user.setLocation("");
+                user.setPic2("");
+                user.setPic3("");
+                user.setPic4("");
+                user.setPic5("");
+                user.setSexPref("");
+                break;
+            case "matcha":
+                user.setGender(data.child("gender").getValue(String.class));
+                user.setUsername(data.child("username").getValue(String.class));
+                user.setProfPic(data.child("profPic").getValue(String.class));
+                user.setFirstName(data.child("firstName").getValue(String.class));
+                user.setEmail(data.child("email").getValue(String.class));
+                user.setBio(data.child("bio").getValue(String.class));
+                user.setBirthDate(data.child("birthDate").getValue(String.class));
+                user.setInterests(data.child("interests").getValue(String.class));
+                user.setLastName(data.child("lastName").getValue(String.class));
+                user.setLocation(data.child("location").getValue(String.class));
+                user.setPic2(data.child("pic2").getValue(String.class));
+                user.setPic3(data.child("pic3").getValue(String.class));
+                user.setPic4(data.child("pic4").getValue(String.class));
+                user.setPic5(data.child("pic5").getValue(String.class));
+                user.setSexPref(data.child("sexPref").getValue(String.class));
+                user.setNotifications(data.child("notifications").getValue(String.class));
+                break;
+        }
         return (user);
     }
-
-    /*    private boolean validateOther() {
-
-        String Username = UsernameEditText.getText().toString();
-        String FirstName = FirstNameEditText.getText().toString();
-        String Surname = SurnameEditText.getText().toString();
-        if (FirstName.isEmpty()) {
-            FirstNameEditText.setError("Field can't be empty.");
-            return false;
-        } else if (Surname.isEmpty()) {
-            SurnameEditText.setError("Field can't be empty.");
-            return false;
-        } else if (Username.isEmpty()) {
-            UsernameEditText.setError("Field can't be empty.");
-            return false;
-        } else {
-            return true;
-        }
-    }*/
-
 }

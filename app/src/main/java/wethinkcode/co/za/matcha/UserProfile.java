@@ -1,34 +1,34 @@
 package wethinkcode.co.za.matcha;
 
+import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.IntentSender;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,34 +40,42 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-
-import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class UserProfile extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private String GPS;
     final static int Gallery_Pick = 1;
     final static int Gallery_Pick2 = 2;
     final static int Gallery_Pick3 = 3;
     final static int Gallery_Pick4 = 4;
     final static int Gallery_Pick5 = 5;
     private StorageReference UserProfileImageRef;
-    ImageView profPic;
-    String profPicUri;
-    ImageView pic2;
-    String pic2Uri;
-    ImageView pic3;
-    String pic3Uri;
-    ImageView pic4;
-    String pic4Uri;
-    ImageView pic5;
-    String pic5Uri;
-    RadioGroup radioGender;
-    RadioButton buttonGender;
-    RadioGroup radioInterestedIn;
-    RadioButton buttonInterestedIn;
-    DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
+    private ImageView profPic;
+    private String profPicUri;
+    private ImageView pic2;
+    private String pic2Uri;
+    private ImageView pic3;
+    private String pic3Uri;
+    private ImageView pic4;
+    private String pic4Uri;
+    private ImageView pic5;
+    private String pic5Uri;
+    private RadioGroup radioGender;
+    private RadioButton buttonGender;
+    private RadioGroup radioInterestedIn;
+    private RadioButton buttonInterestedIn;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    private TextView date;
+    private String birthDate;
+    private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -85,6 +93,76 @@ public class UserProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userprofile);
         Button buttonSave;
+
+        date = findViewById(R.id.textViewDate);
+
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(UserProfile.this,
+                        android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth,
+                        mDateSetListener, year, month, day);
+                dialog.getWindow(); //.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                month++;
+                birthDate = dayOfMonth + "/" + month + "/" + year;
+                try {
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+                    SimpleDateFormat format2 = new SimpleDateFormat("dd MMMM yyyy");
+                    Date date = format1.parse(birthDate);
+                    birthDate = format2.format(date);
+                }
+                catch (Exception e) {
+                    Toast.makeText(UserProfile.this, e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+
+               date.setText(birthDate);
+            }
+        };
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                GPS = location.getLatitude() + " " + location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION,
+                        android.Manifest.permission.INTERNET
+                }, 10);
+                return;
+            }
 
         radioGender = findViewById(R.id.radioGender);
         radioInterestedIn = findViewById(R.id.radioInterestedIn);
@@ -170,6 +248,17 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 10:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    locationManager.requestLocationUpdates("gps", 900000, 10000, locationListener);
+                }
+        }
     }
 
     @Override
@@ -364,44 +453,52 @@ public class UserProfile extends AppCompatActivity {
             editTextUsername.setError("Field can't be empty.");
         } else if (email.isEmpty()) {
             editTextEmail.setError("Field can't be empty.");
+        } else if (birthDate == null){
+            date.setError("Birth date must be selected.");
         } else {
 
-            String gender = buttonGender.getText().toString();
-            String sexPref = buttonInterestedIn.getText().toString();
-            String notifications;
+                String gender = buttonGender.getText().toString();
+                String sexPref = buttonInterestedIn.getText().toString();
+                String notifications;
 
-            if (switchNotifications.isChecked()) {
-                notifications = "yes";
-            } else {
-                notifications = "no";
-            }
+                if (switchNotifications.isChecked()) {
+                    notifications = "yes";
+                } else {
+                    notifications = "no";
+                }
 
-            User user = new User();
+                User user = new User();
 
-            user.setFirstName(firstName);
-            user.setSexPref(sexPref);
-            user.setLocation("");
-            user.setLastName(lastName);
-            user.setInterests(interests);
-            user.setBirthDate("");
-            user.setBio(bio);
-            user.setEmail(email);
-            user.setGender(gender);
-            user.setUsername(username);
-            user.setProfPic(profPicUri);
-            user.setPic2(pic2Uri);
-            user.setPic3(pic3Uri);
-            user.setPic4(pic4Uri);
-            user.setPic5(pic5Uri);
-            user.setNotifications(notifications);
+                user.setFirstName(firstName);
+                user.setSexPref(sexPref);
+                user.setLastName(lastName);
+                user.setInterests(interests);
+                user.setBio(bio);
+                user.setEmail(email);
+                user.setGender(gender);
+                user.setUsername(username);
+                user.setBirthDate(birthDate);
+                user.setProfPic(profPicUri);
+                user.setPic2(pic2Uri);
+                user.setPic3(pic3Uri);
+                user.setPic4(pic4Uri);
+                user.setPic5(pic5Uri);
+                user.setNotifications(notifications);
 
-            FirebaseUser firebaseUser = mAuth.getCurrentUser();
-            if (firebaseUser != null) {
-                String firebaseID = mAuth.getCurrentUser().getUid();
-                users.child(firebaseID).setValue(user);
+                if (GPS != null) {
+                    user.setLocation(GPS);
+                } else {
+                    user.setLocation("");
+                }
+
+                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    String firebaseID = mAuth.getCurrentUser().getUid();
+                    users.child(firebaseID).setValue(user);
+                }
             }
         }
-    }
+
 
     private void updateDB() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
@@ -573,7 +670,6 @@ public class UserProfile extends AppCompatActivity {
                 break;
             case "facebook":
                 user.setEmail(data.child("email").getValue(String.class));
-                user.setBirthDate(data.child("birthday").getValue(String.class));
                 user.setFirstName(data.child("first_name").getValue(String.class));
                 user.setGender(data.child("gender").getValue(String.class));
                 user.setLastName(data.child("last_name").getValue(String.class));
@@ -587,6 +683,18 @@ public class UserProfile extends AppCompatActivity {
                 user.setPic4("");
                 user.setPic5("");
                 user.setSexPref("");
+                try {
+                    SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+                    SimpleDateFormat format2 = new SimpleDateFormat("dd MMMM yyyy");
+                    Date date = format1.parse(data.child("birthday").getValue(String.class));
+                    birthDate = format2.format(date);
+                }
+                catch (Exception e) {
+                    Toast.makeText(UserProfile.this, e.getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+                date.setText(birthDate);
+                user.setBirthDate(birthDate);
                 break;
             case "matcha":
                 user.setGender(data.child("gender").getValue(String.class));

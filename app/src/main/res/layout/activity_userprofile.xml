@@ -144,27 +144,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
+
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
-           <Space
-               android:layout_width="match_parent"
-               android:layout_height="2dp" />
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp" />
 
-        <TextView
-            android:id="@+id/textViewGender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:text="@string/gender" />
+                <TextView
+                    android:id="@+id/textViewBirthDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:text="Birth Date:" />
 
             </LinearLayout>
 
@@ -172,33 +174,78 @@
                 android:layout_width="20dp"
                 android:layout_height="match_parent" />
 
-        <RadioGroup
-            android:id="@+id/radioGender"
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Select Date" />
+
+        </LinearLayout>
+
+
+
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radioMale"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:clickable="true"
-                android:duplicateParentState="false"
-                android:focusable="true"
-                android:onClick="genderClick"
-                android:text="@string/male" />
+                android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/radioFemale"
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp" />
+
+                <TextView
+                    android:id="@+id/textViewGender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:text="@string/gender" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
+
+            <RadioGroup
+                android:id="@+id/radioGender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:onClick="genderClick"
-                android:text="@string/female" />
+                android:layout_gravity="center">
 
-        </RadioGroup>
+                <RadioButton
+                    android:id="@+id/radioMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:clickable="true"
+                    android:duplicateParentState="false"
+                    android:focusable="true"
+                    android:onClick="genderClick"
+                    android:text="@string/male" />
+
+                <RadioButton
+                    android:id="@+id/radioFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="genderClick"
+                    android:text="@string/female" />
+
+            </RadioGroup>
 
         </LinearLayout>
 

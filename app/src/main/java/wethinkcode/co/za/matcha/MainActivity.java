@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 progress.setVisibility(View.GONE);
                 // Google Sign In failed, update UI appropriately
-                Toast.makeText(MainActivity.this, e.getMessage(),
+                Toast.makeText(MainActivity.this, "Login failed.",
                         Toast.LENGTH_SHORT).show();
                 // ...
             }

@@ -1,7 +1,11 @@
 package wethinkcode.co.za.matcha;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -15,13 +19,61 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Account extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+    private String GPS;
+    final static int Gallery_Pick = 1;
+    final static int Gallery_Pick2 = 2;
+    final static int Gallery_Pick3 = 3;
+    final static int Gallery_Pick4 = 4;
+    final static int Gallery_Pick5 = 5;
+    private StorageReference UserProfileImageRef;
+    private ImageView profPic;
+    private String profPicUri;
+    private ImageView pic2;
+    private String pic2Uri;
+    private ImageView pic3;
+    private String pic3Uri;
+    private ImageView pic4;
+    private String pic4Uri;
+    private ImageView pic5;
+    private String pic5Uri;
+    private RadioGroup radioGender;
+    private RadioButton buttonGender;
+    private RadioGroup radioInterestedIn;
+    private RadioButton buttonInterestedIn;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    private TextView date;
+    private String birthDate;
+    private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -35,20 +87,6 @@ public class Account extends AppCompatActivity {
         }
     };
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,32 +98,26 @@ public class Account extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
+        updateUI();
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_account, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_changePW) {
             Intent gotoLogin = new Intent(getApplicationContext(), ChangePassword.class);
             startActivity(gotoLogin);
@@ -103,55 +135,6 @@ public class Account extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = null;
-            switch (getArguments().getInt(ARG_SECTION_NUMBER))
-            {
-                case 1:
-                    rootView = inflater.inflate(R.layout.fragment_userprofile, container, false);
-                    break;
-                case 2:
-                    rootView = inflater.inflate(R.layout.fragment_matcha, container, false);
-                    break;
-                case 3:
-                    rootView = inflater.inflate(R.layout.fragment_messages, container, false);
-                    break;
-            }
-            return rootView;
-        }
-    }
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -160,15 +143,128 @@ public class Account extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+            switch (position) {
+                case 0:
+                    FragUserProfile fragUserProfile = new FragUserProfile();
+                    return fragUserProfile;
+                case 1:
+                    FragMatcha fragMatcha = new FragMatcha();
+                    return fragMatcha;
+                case 2:
+                    FragMessages fragMessages = new FragMessages();
+                    return fragMessages;
+                default:
+                    return null;
+            }
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
             return 3;
+        }
+    }
+
+    private void updateUI() {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            String firebaseID = mAuth.getCurrentUser().getUid();
+            Query query = users.child(firebaseID);
+
+            query.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child("email").getValue() != null) {
+                        User user = fetchData(dataSnapshot);
+                        fillForm(user);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            Toast.makeText(Account.this, "User not found in updateUI.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private User fetchData(DataSnapshot data) {
+        User user = new User();
+
+        user.setGender(data.child("gender").getValue(String.class));
+        user.setBirthDate(data.child("birthDate").getValue(String.class));
+        user.setUsername(data.child("username").getValue(String.class));
+        user.setProfPic(data.child("profPic").getValue(String.class));
+        user.setFirstName(data.child("firstName").getValue(String.class));
+        user.setEmail(data.child("email").getValue(String.class));
+        user.setBio(data.child("bio").getValue(String.class));
+        user.setBirthDate(data.child("birthDate").getValue(String.class));
+        user.setInterests(data.child("interests").getValue(String.class));
+        user.setLastName(data.child("lastName").getValue(String.class));
+        user.setLocation(data.child("location").getValue(String.class));
+        user.setPic2(data.child("pic2").getValue(String.class));
+        user.setPic3(data.child("pic3").getValue(String.class));
+        user.setPic4(data.child("pic4").getValue(String.class));
+        user.setPic5(data.child("pic5").getValue(String.class));
+        user.setSexPref(data.child("sexPref").getValue(String.class));
+        user.setNotifications(data.child("notifications").getValue(String.class));
+        return (user);
+    }
+
+    private void fillForm(User user) {
+        date = findViewById(R.id.textViewDate);
+        TextView firstName = findViewById(R.id.textViewFirstName);
+        TextView bio = findViewById(R.id.textViewBio);
+        TextView interests = findViewById(R.id.textViewInterests);
+        TextView lastName = findViewById(R.id.textViewLastName);
+        TextView username = findViewById(R.id.textViewUsername);
+        TextView email = findViewById(R.id.textViewEmail);
+        TextView gender = findViewById(R.id.textViewGender);
+        TextView interestedIn = findViewById(R.id.textViewInterestedIn);
+        ImageView profPic = findViewById(R.id.ImageViewProf);
+        ImageView pic2 = findViewById(R.id.imageView2);
+        ImageView pic3 = findViewById(R.id.imageView3);
+        ImageView pic4 = findViewById(R.id.imageView4);
+        ImageView pic5 = findViewById(R.id.imageView5);
+
+
+        username.setText(user.getUsername());
+        email.setText(user.getEmail());
+        date.setText(user.getBirthDate());
+        firstName.setText(user.getFirstName());
+        lastName.setText(user.getLastName());
+        bio.setText(user.getBio());
+        interests.setText(user.getInterests());
+        gender.setText(user.getGender());
+        interestedIn.setText(user.getSexPref());
+
+        if (!user.getProfPic().isEmpty()) {
+            Picasso.with(this).load(user.getProfPic()).into(profPic);
+        } else {
+            profPic.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic2().isEmpty()) {
+            Picasso.with(this).load(user.getPic2()).into(pic2);
+        } else {
+            pic2.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic3().isEmpty()) {
+            Picasso.with(this).load(user.getPic3()).into(pic3);
+        } else {
+            pic3.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic4().isEmpty()) {
+            Picasso.with(this).load(user.getPic4()).into(pic4);
+        } else {
+            pic4.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic5().isEmpty()) {
+            Picasso.with(this).load(user.getPic5()).into(pic5);
+        } else {
+            pic5.setVisibility(View.INVISIBLE);
         }
     }
 }

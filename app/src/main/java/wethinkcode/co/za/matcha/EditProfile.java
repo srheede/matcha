@@ -455,6 +455,10 @@ public class EditProfile extends AppCompatActivity {
 
         if (username.isEmpty()) {
             editTextUsername.setError("Field can't be empty.");
+        } else if (firstName.isEmpty()) {
+            editTextFirstName.setError("Field can't be empty.");
+        } else if (lastName.isEmpty()) {
+            editTextLastName.setError("Field can't be empty.");
         } else if (email.isEmpty()) {
             editTextEmail.setError("Field can't be empty.");
         } else if (birthDate == null){
@@ -566,6 +570,7 @@ public class EditProfile extends AppCompatActivity {
         bio.setText(user.getBio());
         email.setText(user.getEmail());
         interests.setText(user.getInterests());
+        date.setText(user.getBirthDate());
         if (!user.getProfPic().isEmpty()) {
             Picasso.with(this).load(user.getProfPic()).into(profPic);
             profPicUri = user.getProfPic();

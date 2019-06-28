@@ -454,6 +454,10 @@ public class CreateProfile extends AppCompatActivity {
 
         if (username.isEmpty()) {
             editTextUsername.setError("Field can't be empty.");
+        } else if (firstName.isEmpty()) {
+            editTextFirstName.setError("Field can't be empty.");
+        } else if (lastName.isEmpty()) {
+            editTextLastName.setError("Field can't be empty.");
         } else if (email.isEmpty()) {
             editTextEmail.setError("Field can't be empty.");
         } else if (birthDate == null){
@@ -531,7 +535,6 @@ public class CreateProfile extends AppCompatActivity {
                         query.removeEventListener(this);
                         users.child(firebaseID).removeValue();
                         fillForm(user);
-                        //updateUI();
                     }
                 }
 
@@ -545,31 +548,6 @@ public class CreateProfile extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
-//    private void updateUI() {
-//        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-//        if (firebaseUser != null) {
-//            String firebaseID = mAuth.getCurrentUser().getUid();
-//            Query query = users.child(firebaseID);
-//
-//            query.addValueEventListener(new ValueEventListener() {
-//
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    User user = fetchData(dataSnapshot);
-//                    fillForm(user);
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-//        } else {
-//            Toast.makeText(CreateProfile.this, "User not found in updateUI.",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void fillForm(User user) {
         EditText firstName = findViewById(R.id.editTextFirstName);
@@ -596,6 +574,9 @@ public class CreateProfile extends AppCompatActivity {
         bio.setText(user.getBio());
         email.setText(user.getEmail());
         interests.setText(user.getInterests());
+        if (!user.getBirthDate().isEmpty()) {
+            date.setText(user.getBirthDate());
+        }
         if (!user.getProfPic().isEmpty()) {
             Picasso.with(this).load(user.getProfPic()).into(profPic);
             profPicUri = user.getProfPic();

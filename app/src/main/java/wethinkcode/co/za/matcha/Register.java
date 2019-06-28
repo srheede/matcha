@@ -1,6 +1,5 @@
 package wethinkcode.co.za.matcha;
 
-import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -218,14 +217,17 @@ public class  Register extends AppCompatActivity
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             progress.setVisibility(View.GONE);
-                                            Toast.makeText(Register.this, "User logged in.",
-                                                    Toast.LENGTH_SHORT).show();
-                                            Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+//                                            Toast.makeText(Register.this, "User logged in.",
+//                                                    Toast.LENGTH_SHORT).show();
+                                            Intent gotoAccount = new Intent(getApplicationContext(), CreateProfile.class);
                                             startActivity(gotoAccount);
                                         } else {
+                                            FirebaseAuth.getInstance().signOut();
+                                            LoginManager.getInstance().logOut();
                                             progress.setVisibility(View.GONE);
                                             Toast.makeText(Register.this, "Account already exists. Please go to login.",
                                                     Toast.LENGTH_SHORT).show();
+
                                         }
                                     }
                                 });
@@ -335,8 +337,6 @@ public class  Register extends AppCompatActivity
                         User = new JSONParser().parse(Object);
                         users.child(firebaseID).setValue(User);
                         progress.setVisibility(View.GONE);
-                        Toast.makeText(Register.this, "User account created.",
-                                Toast.LENGTH_SHORT).show();
                     }
                     catch (Exception e)
                     {
@@ -346,7 +346,8 @@ public class  Register extends AppCompatActivity
                     }
                 } else {
                     progress.setVisibility(View.GONE);
-                    Toast.makeText(Register.this, "User logged in.",
+                    FirebaseAuth.getInstance().signOut();
+                    Toast.makeText(Register.this, "Account already exists. Please go to login.",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -356,7 +357,7 @@ public class  Register extends AppCompatActivity
 
             }
         });
-        Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+        Intent gotoAccount = new Intent(getApplicationContext(), CreateProfile.class);
         startActivity(gotoAccount);
     }
 

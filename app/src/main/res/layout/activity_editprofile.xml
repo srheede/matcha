@@ -4,17 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserProfile">
+    tools:context=".EditProfile">
 
     <TextView
-        android:id="@+id/TextViewLogout"
+        android:id="@+id/TextViewCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:focusable="true"
         android:clickable="true"
-        android:text="@string/logout"
+        android:focusable="true"
+        android:text="@string/cancel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -363,26 +363,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Change Password"
-                tools:layout_editor_absoluteX="167dp"
-                tools:layout_editor_absoluteY="420dp" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
         <Button
             android:id="@+id/buttonSave"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:text="Save Profile"
             android:layout_gravity="center"
-            />
+            android:text="Save Changes" />
 
         <Space
             android:layout_width="match_parent"

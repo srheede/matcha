@@ -146,32 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (validateDetails()) {
-                    progress.setVisibility(View.VISIBLE);
-
-                    EditText EmailEditText = findViewById(R.id.email);
-                    EditText PWEditText = findViewById(R.id.pw);
-
-                    String Email = EmailEditText.getText().toString();
-                    String PW = PWEditText.getText().toString();
-
-                    mAuth.signInWithEmailAndPassword(Email, PW).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                progress.setVisibility(View.GONE);
-                                Toast.makeText(MainActivity.this, "User logged in.",
-                                        Toast.LENGTH_SHORT).show();
-                                Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
-                                startActivity(gotoAccount);
-                            } else {
-                                progress.setVisibility(View.GONE);
-                                Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
+                firebaseAuthWithEmail();
             }
         });
     }
@@ -211,6 +186,68 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
+
+
+    private void firebaseAuthWithEmail() {
+
+
+        if (validateDetails()) {
+            progress.setVisibility(View.VISIBLE);
+
+            EditText EmailEditText = findViewById(R.id.email);
+            EditText PWEditText = findViewById(R.id.pw);
+
+            String Email = EmailEditText.getText().toString();
+            String PW = PWEditText.getText().toString();
+
+            DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
+
+            mAuth.signInWithEmailAndPassword(Email, PW)
+                    .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                        @Override
+                        public void onSuccess(AuthResult authResult) {
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                            if (firebaseUser != null) {
+                                String firebaseID = mAuth.getCurrentUser().getUid();
+                                Query query = users.orderByKey().equalTo(firebaseID);
+                                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            progress.setVisibility(View.GONE);
+                                        Toast.makeText(MainActivity.this, "User logged in.",
+                                                Toast.LENGTH_SHORT).show();
+                                            Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
+                                            startActivity(gotoAccount);
+                                        } else {
+                                            progress.setVisibility(View.GONE);
+                                            Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
+                                                    Toast.LENGTH_SHORT).show();
+                                            FirebaseAuth.getInstance().getCurrentUser().delete();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            } else {
+                                Toast.makeText(MainActivity.this, "User not found in firebaseAuthWithGoogle.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }
+    }
+
+
+
+
+
+
+
+
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -233,13 +270,13 @@ public class MainActivity extends AppCompatActivity {
                                         progress.setVisibility(View.GONE);
                                         Toast.makeText(MainActivity.this, "User logged in.",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                                        Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
                                         startActivity(gotoAccount);
                                     } else {
                                         progress.setVisibility(View.GONE);
                                         Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
                                                 Toast.LENGTH_SHORT).show();
-                                        FirebaseAuth.getInstance().signOut();
+                                        FirebaseAuth.getInstance().getCurrentUser().delete();
                                     }
 
                                 }
@@ -279,13 +316,14 @@ public class MainActivity extends AppCompatActivity {
                                         progress.setVisibility(View.GONE);
                                         Toast.makeText(MainActivity.this, "User logged in.",
                                                 Toast.LENGTH_SHORT).show();
-                                        Intent gotoAccount = new Intent(getApplicationContext(), UserProfile.class);
+                                        Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
                                         startActivity(gotoAccount);
                                     } else {
                                         progress.setVisibility(View.GONE);
                                         Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",
                                                 Toast.LENGTH_SHORT).show();
                                         LoginManager.getInstance().logOut();
+                                        FirebaseAuth.getInstance().getCurrentUser().delete();
                                     }
                                 }
 

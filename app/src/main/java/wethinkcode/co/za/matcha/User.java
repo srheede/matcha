@@ -25,7 +25,7 @@ public class User {
     public User(){
         platform = "matcha";
         notifications = "yes";
-    };
+    }
 
     public String getPic2() {
         return pic2;

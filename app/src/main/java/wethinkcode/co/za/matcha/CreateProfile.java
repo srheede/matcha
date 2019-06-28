@@ -40,13 +40,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-public class UserProfile extends AppCompatActivity {
+public class CreateProfile extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private LocationManager locationManager;
@@ -82,7 +81,7 @@ public class UserProfile extends AppCompatActivity {
         public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
             if (firebaseAuth.getCurrentUser() == null) {
-                Intent gotoLogout = new Intent(getApplicationContext(), MainActivity.class);
+                Intent gotoLogout = new Intent(getApplicationContext(), Register.class);
                 startActivity(gotoLogout);
             }
         }
@@ -91,7 +90,7 @@ public class UserProfile extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userprofile);
+        setContentView(R.layout.activity_createprofile);
         Button buttonSave;
 
         date = findViewById(R.id.textViewDate);
@@ -104,7 +103,7 @@ public class UserProfile extends AppCompatActivity {
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(UserProfile.this,
+                DatePickerDialog dialog = new DatePickerDialog(CreateProfile.this,
                         android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth,
                         mDateSetListener, year, month, day);
                 dialog.getWindow(); //.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -124,45 +123,13 @@ public class UserProfile extends AppCompatActivity {
                     birthDate = format2.format(date);
                 }
                 catch (Exception e) {
-                    Toast.makeText(UserProfile.this, e.getMessage(),
+                    Toast.makeText(CreateProfile.this, e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
 
                date.setText(birthDate);
             }
         };
-
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                GPS = location.getLatitude() + " " + location.getLongitude();
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(intent);
-            }
-        };
-
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION,
-                        android.Manifest.permission.INTERNET
-                }, 10);
-                return;
-            }
 
         radioGender = findViewById(R.id.radioGender);
         radioInterestedIn = findViewById(R.id.radioInterestedIn);
@@ -185,7 +152,7 @@ public class UserProfile extends AppCompatActivity {
 
         buttonSave = findViewById(R.id.buttonSave);
 
-        TextView Logout = findViewById(R.id.TextViewLogout);
+        TextView Cancel = findViewById(R.id.TextViewCancel);
 
         profPic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,11 +207,11 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-        Logout.setOnClickListener(new View.OnClickListener() {
+        Cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
                 LoginManager.getInstance().logOut();
+                FirebaseAuth.getInstance().getCurrentUser().delete();
             }
         });
 
@@ -257,6 +224,8 @@ public class UserProfile extends AppCompatActivity {
             case 10:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     locationManager.requestLocationUpdates("gps", 900000, 10000, locationListener);
+                    Toast.makeText(CreateProfile.this, "done",
+                            Toast.LENGTH_SHORT).show();
                 }
         }
     }
@@ -282,7 +251,7 @@ public class UserProfile extends AppCompatActivity {
                             getDownloadUrl.addOnSuccessListener(new OnSuccessListener() {
                                 @Override
                                 public void onSuccess(Object o) {
-                                    Picasso.with(UserProfile.this).load(o.toString()).into(profPic);
+                                    Picasso.with(CreateProfile.this).load(o.toString()).into(profPic);
                                     profPicUri = o.toString();
                                 }
                             });
@@ -290,7 +259,7 @@ public class UserProfile extends AppCompatActivity {
                     }
                 });
             } catch (Exception e) {
-                Toast.makeText(UserProfile.this, e.getMessage(),
+                Toast.makeText(CreateProfile.this, e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -312,14 +281,14 @@ public class UserProfile extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Object o) {
                                     pic2Uri = o.toString();
-                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic2);
+                                    Picasso.with(CreateProfile.this).load(o.toString()).into(pic2);
                                 }
                             });
                         }
                     }
                 });
             } catch (Exception e) {
-                Toast.makeText(UserProfile.this, e.getMessage(),
+                Toast.makeText(CreateProfile.this, e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -341,14 +310,14 @@ public class UserProfile extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Object o) {
                                     pic3Uri = o.toString();
-                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic3);
+                                    Picasso.with(CreateProfile.this).load(o.toString()).into(pic3);
                                 }
                             });
                         }
                     }
                 });
             } catch (Exception e) {
-                Toast.makeText(UserProfile.this, e.getMessage(),
+                Toast.makeText(CreateProfile.this, e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -370,14 +339,14 @@ public class UserProfile extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Object o) {
                                     pic4Uri = o.toString();
-                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic4);
+                                    Picasso.with(CreateProfile.this).load(o.toString()).into(pic4);
                                 }
                             });
                         }
                     }
                 });
             } catch (Exception e) {
-                Toast.makeText(UserProfile.this, e.getMessage(),
+                Toast.makeText(CreateProfile.this, e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -399,14 +368,14 @@ public class UserProfile extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Object o) {
                                     pic5Uri = o.toString();
-                                    Picasso.with(UserProfile.this).load(o.toString()).into(pic5);
+                                    Picasso.with(CreateProfile.this).load(o.toString()).into(pic5);
                                 }
                             });
                         }
                     }
                 });
             } catch (Exception e) {
-                Toast.makeText(UserProfile.this, e.getMessage(),
+                Toast.makeText(CreateProfile.this, e.getMessage(),
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -417,6 +386,40 @@ public class UserProfile extends AppCompatActivity {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
         updateDB();
+
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+         locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                GPS = location.getLatitude() + " " + location.getLongitude();
+                Toast.makeText(CreateProfile.this, "done",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.INTERNET
+            }, 10);
+            return;
+        }
     }
 
     public void interestedInClick(View view) {
@@ -487,14 +490,27 @@ public class UserProfile extends AppCompatActivity {
 
                 if (GPS != null) {
                     user.setLocation(GPS);
+                    Toast.makeText(CreateProfile.this, "Location stored.",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     user.setLocation("");
+                    Toast.makeText(CreateProfile.this, "Location not found.",
+                            Toast.LENGTH_SHORT).show();
                 }
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     String firebaseID = mAuth.getCurrentUser().getUid();
-                    users.child(firebaseID).setValue(user);
+                    try {
+                        users.child(firebaseID).setValue(user);
+                        Toast.makeText(CreateProfile.this, "User account created.",
+                                Toast.LENGTH_SHORT).show();
+                        Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
+                        startActivity(gotoAccount);
+                    } catch (Exception e){
+                        Toast.makeText(CreateProfile.this, e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         }
@@ -513,9 +529,9 @@ public class UserProfile extends AppCompatActivity {
                     if (dataSnapshot.child("email").getValue() != null) {
                         User user = fetchData(dataSnapshot);
                         query.removeEventListener(this);
-                        users.child(firebaseID).setValue(user);
+                        users.child(firebaseID).removeValue();
                         fillForm(user);
-                        updateUI();
+                        //updateUI();
                     }
                 }
 
@@ -525,35 +541,35 @@ public class UserProfile extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(UserProfile.this, "User not found in updateUI.",
+            Toast.makeText(CreateProfile.this, "User not found in updateUI.",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateUI() {
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            String firebaseID = mAuth.getCurrentUser().getUid();
-            Query query = users.child(firebaseID);
-
-            query.addValueEventListener(new ValueEventListener() {
-
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    User user = fetchData(dataSnapshot);
-                    fillForm(user);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } else {
-            Toast.makeText(UserProfile.this, "User not found in updateUI.",
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void updateUI() {
+//        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+//        if (firebaseUser != null) {
+//            String firebaseID = mAuth.getCurrentUser().getUid();
+//            Query query = users.child(firebaseID);
+//
+//            query.addValueEventListener(new ValueEventListener() {
+//
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    User user = fetchData(dataSnapshot);
+//                    fillForm(user);
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//        } else {
+//            Toast.makeText(CreateProfile.this, "User not found in updateUI.",
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void fillForm(User user) {
         EditText firstName = findViewById(R.id.editTextFirstName);
@@ -690,7 +706,7 @@ public class UserProfile extends AppCompatActivity {
                     birthDate = format2.format(date);
                 }
                 catch (Exception e) {
-                    Toast.makeText(UserProfile.this, e.getMessage(),
+                    Toast.makeText(CreateProfile.this, e.getMessage(),
                             Toast.LENGTH_SHORT).show();
                 }
                 date.setText(birthDate);
@@ -698,6 +714,7 @@ public class UserProfile extends AppCompatActivity {
                 break;
             case "matcha":
                 user.setGender(data.child("gender").getValue(String.class));
+                user.setBirthDate(data.child("birthDate").getValue(String.class));
                 user.setUsername(data.child("username").getValue(String.class));
                 user.setProfPic(data.child("profPic").getValue(String.class));
                 user.setFirstName(data.child("firstName").getValue(String.class));

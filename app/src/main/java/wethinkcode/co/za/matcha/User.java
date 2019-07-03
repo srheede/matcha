@@ -1,7 +1,5 @@
 package wethinkcode.co.za.matcha;
 
-import android.net.Uri;
-
 public class User {
 
     private String  platform;

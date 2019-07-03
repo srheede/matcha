@@ -1,32 +1,20 @@
 package wethinkcode.co.za.matcha;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,41 +24,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Account extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private LocationManager locationManager;
-    private LocationListener locationListener;
-    private String GPS;
-    final static int Gallery_Pick = 1;
-    final static int Gallery_Pick2 = 2;
-    final static int Gallery_Pick3 = 3;
-    final static int Gallery_Pick4 = 4;
-    final static int Gallery_Pick5 = 5;
-    private StorageReference UserProfileImageRef;
-    private ImageView profPic;
-    private String profPicUri;
-    private ImageView pic2;
-    private String pic2Uri;
-    private ImageView pic3;
-    private String pic3Uri;
-    private ImageView pic4;
-    private String pic4Uri;
-    private ImageView pic5;
-    private String pic5Uri;
-    private RadioGroup radioGender;
-    private RadioButton buttonGender;
-    private RadioGroup radioInterestedIn;
-    private RadioButton buttonInterestedIn;
-    private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TextView date;
-    private String birthDate;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -124,6 +84,10 @@ public class Account extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_editProfile) {
             Intent gotoLogin = new Intent(getApplicationContext(), EditProfile.class);
+            startActivity(gotoLogin);
+            return true;
+        } else if (id == R.id.action_settings) {
+            Intent gotoLogin = new Intent(getApplicationContext(), SettingsActivity.class);
             startActivity(gotoLogin);
             return true;
         } else if (id == R.id.action_logout) {

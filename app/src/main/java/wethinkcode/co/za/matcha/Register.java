@@ -74,11 +74,8 @@ public class  Register extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Progress bar
 
         progress = (ProgressBar)findViewById(R.id.progressBar);
-
-        // Link to login area
 
         TVLogin = (TextView) findViewById(R.id.textViewLogin);
 
@@ -162,12 +159,10 @@ public class  Register extends AppCompatActivity
 
             @Override
             public void onCancel() {
-                // ...
             }
 
             @Override
             public void onError(FacebookException error) {
-                // ...
             }
         });
 
@@ -217,8 +212,6 @@ public class  Register extends AppCompatActivity
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             progress.setVisibility(View.GONE);
-//                                            Toast.makeText(Register.this, "User logged in.",
-//                                                    Toast.LENGTH_SHORT).show();
                                             Intent gotoAccount = new Intent(getApplicationContext(), CreateProfile.class);
                                             startActivity(gotoAccount);
                                         } else {
@@ -248,23 +241,17 @@ public class  Register extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 progress.setVisibility(View.GONE);
-                // Google Sign In failed, update UI appropriately
                 Toast.makeText(Register.this, "Authentication failed.",
                         Toast.LENGTH_SHORT).show();
-                // ...
             }
         }
         else {
-            // Pass the activity result back to the Facebook SDK
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }

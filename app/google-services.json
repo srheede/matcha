@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "622912310086",
+    "firebase_url": "https://matcha-809dc.firebaseio.com",
+    "project_id": "matcha-809dc",
+    "storage_bucket": "matcha-809dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622912310086:android:bdd48fc8a6f437c7",
+        "android_client_info": {
+          "package_name": "wethinkcode.co.za.matcha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622912310086-7feonutm3qhrolrk81n07okf7dt97bqb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

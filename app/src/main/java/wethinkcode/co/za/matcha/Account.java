@@ -1,20 +1,22 @@
 package wethinkcode.co.za.matcha;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +36,8 @@ public class Account extends AppCompatActivity {
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private Button buttonYes;
+    private Button buttonNo;
 
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -64,6 +68,7 @@ public class Account extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         updateUI();
+        nextMatch();
     }
 
 
@@ -115,8 +120,8 @@ public class Account extends AppCompatActivity {
                     FragMatcha fragMatcha = new FragMatcha();
                     return fragMatcha;
                 case 2:
-                    FragMessages fragMessages = new FragMessages();
-                    return fragMessages;
+                    FragSettings fragSettings = new FragSettings();
+                    return fragSettings;
                 default:
                     return null;
             }
@@ -155,6 +160,37 @@ public class Account extends AppCompatActivity {
         }
     }
 
+    private void nextMatch() {
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            String firebaseID = selectNextMatch(mAuth.getCurrentUser().getUid());
+            Query query = users.child(firebaseID);
+
+            query.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child("email").getValue() != null) {
+                        User user = fetchData(dataSnapshot);
+                        fillFormMatcha(user);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            Toast.makeText(Account.this, "No new matches in your area.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String selectNextMatch(String uid) {
+        return uid;
+    }
+
     private User fetchData(DataSnapshot data) {
         User user = new User();
 
@@ -187,6 +223,7 @@ public class Account extends AppCompatActivity {
         TextView username = findViewById(R.id.textViewUsername);
         TextView email = findViewById(R.id.textViewEmail);
         TextView gender = findViewById(R.id.textViewGender);
+        TextView location = findViewById(R.id.textViewLocation);
         TextView interestedIn = findViewById(R.id.textViewInterestedIn);
         ImageView profPic = findViewById(R.id.ImageViewProf);
         ImageView pic2 = findViewById(R.id.imageView2);
@@ -204,6 +241,82 @@ public class Account extends AppCompatActivity {
         interests.setText(user.getInterests());
         gender.setText(user.getGender());
         interestedIn.setText(user.getSexPref());
+        location.setText(user.getLocation());
+
+        if (!user.getProfPic().isEmpty()) {
+            Picasso.with(this).load(user.getProfPic()).into(profPic);
+        } else {
+            profPic.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic2().isEmpty()) {
+            Picasso.with(this).load(user.getPic2()).into(pic2);
+        } else {
+            pic2.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic3().isEmpty()) {
+            Picasso.with(this).load(user.getPic3()).into(pic3);
+        } else {
+            pic3.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic4().isEmpty()) {
+            Picasso.with(this).load(user.getPic4()).into(pic4);
+        } else {
+            pic4.setVisibility(View.INVISIBLE);
+        }
+        if (!user.getPic5().isEmpty()) {
+            Picasso.with(this).load(user.getPic5()).into(pic5);
+        } else {
+            pic5.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void fillFormMatcha(User user) {
+
+        buttonYes = findViewById(R.id.buttonYes);
+
+        buttonYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextMatch();
+            }
+        });
+
+        buttonNo = findViewById(R.id.buttonNo);
+
+        buttonNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextMatch();
+            }
+        });
+
+        date = findViewById(R.id.textViewDate2);
+        TextView firstName = findViewById(R.id.textViewFirstName2);
+        TextView bio = findViewById(R.id.textViewBio2);
+        TextView interests = findViewById(R.id.textViewInterests2);
+        TextView lastName = findViewById(R.id.textViewLastName2);
+        TextView username = findViewById(R.id.textViewUsername2);
+        TextView email = findViewById(R.id.textViewEmail2);
+        TextView gender = findViewById(R.id.textViewGender2);
+        TextView location = findViewById(R.id.textViewLocation2);
+        TextView interestedIn = findViewById(R.id.textViewInterestedIn2);
+        ImageView profPic = findViewById(R.id.ImageViewProf2);
+        ImageView pic2 = findViewById(R.id.imageView22);
+        ImageView pic3 = findViewById(R.id.imageView32);
+        ImageView pic4 = findViewById(R.id.imageView42);
+        ImageView pic5 = findViewById(R.id.imageView52);
+
+
+        username.setText(user.getUsername());
+        email.setText(user.getEmail());
+        date.setText(user.getBirthDate());
+        firstName.setText(user.getFirstName());
+        lastName.setText(user.getLastName());
+        bio.setText(user.getBio());
+        interests.setText(user.getInterests());
+        gender.setText(user.getGender());
+        interestedIn.setText(user.getSexPref());
+        location.setText(user.getLocation());
 
         if (!user.getProfPic().isEmpty()) {
             Picasso.with(this).load(user.getProfPic()).into(profPic);

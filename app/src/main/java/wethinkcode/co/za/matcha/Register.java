@@ -1,5 +1,6 @@
 package wethinkcode.co.za.matcha;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +9,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.content.Intent;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,34 +28,37 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.regex.Pattern;
-
 
 public class  Register extends AppCompatActivity
 {
 
+    private static final SecureRandom secureRandom = new SecureRandom();
+    private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder();
     private static final Pattern PASSWORD_LENGTH = Pattern.compile("^.{8,}$");
     private static final Pattern PASSWORD_NUMBER = Pattern.compile("^(?=.*[0-9]).{2,}$");
     private static final Pattern PASSWORD_LETTER = Pattern.compile("^(?=.*[a-zA-Z]).{2,}$");
@@ -189,17 +192,23 @@ public class  Register extends AppCompatActivity
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 JSONObject object = new JSONObject();
-                                try {
-                                    object.put("platform", "email");
-                                    object.put("email", Email);
-                                }
-                                catch (Exception e){
-                                    Toast.makeText(Register.this, e.getMessage(),
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                                    FirebaseUser user = mAuth.getCurrentUser();
+                                FirebaseUser user = mAuth.getCurrentUser();
                                 if (user != null) {
-                                    updateUI(user, object);
+                                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            try {
+                                                object.put("platform", "email");
+                                                object.put("email", Email);
+                                                updateUI(user, object);
+                                                Toast.makeText(Register.this, "Please check your email to activate your account.", Toast.LENGTH_SHORT).show();
+                                            }
+                                            catch (Exception e){
+                                                Toast.makeText(Register.this, e.getMessage(),
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                                 else {
                                     Toast.makeText(Register.this, "User not found in registerSubmit.setOnClickListener.",

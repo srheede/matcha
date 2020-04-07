@@ -8,12 +8,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -24,11 +24,14 @@ import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+//import com.google.android.libraries.places.api.Places;
+//import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
-import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -73,6 +76,7 @@ public class CreateProfile extends AppCompatActivity {
     private RadioButton buttonInterestedIn;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TextView date;
+    private TextView location;
     private String birthDate;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
 
@@ -93,7 +97,14 @@ public class CreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_createprofile);
         Button buttonSave;
 
+//        // Initialize the SDK
+//        Places.initialize(getApplicationContext(), "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU");
+//
+//        // Create a new Places client instance
+//        PlacesClient placesClient = Places.createClient(this);
+
         date = findViewById(R.id.textViewDate);
+        location = findViewById(R.id.textLocation);
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +119,13 @@ public class CreateProfile extends AppCompatActivity {
                         mDateSetListener, year, month, day);
                 dialog.getWindow(); //.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
+            }
+        });
+
+        location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -224,8 +242,6 @@ public class CreateProfile extends AppCompatActivity {
             case 10:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     locationManager.requestLocationUpdates("gps", 900000, 10000, locationListener);
-                    Toast.makeText(CreateProfile.this, "done",
-                            Toast.LENGTH_SHORT).show();
                 }
         }
     }
@@ -392,8 +408,6 @@ public class CreateProfile extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 GPS = location.getLatitude() + " " + location.getLongitude();
-                Toast.makeText(CreateProfile.this, "done",
-                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -443,6 +457,7 @@ public class CreateProfile extends AppCompatActivity {
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextUsername = findViewById(R.id.editTextUsername);
         EditText editTextInterests = findViewById(R.id.editTextInterests);
+        TextView textViewLocation = findViewById(R.id.textLocation);
         Switch switchNotifications = findViewById(R.id.switchNotifications);
 
         String firstName = editTextFirstName.getText().toString();
@@ -451,6 +466,7 @@ public class CreateProfile extends AppCompatActivity {
         String email = editTextEmail.getText().toString();
         String username = editTextUsername.getText().toString();
         String interests = editTextInterests.getText().toString();
+        String location = textViewLocation.getText().toString();
 
         if (username.isEmpty()) {
             editTextUsername.setError("Field can't be empty.");
@@ -462,6 +478,8 @@ public class CreateProfile extends AppCompatActivity {
             editTextEmail.setError("Field can't be empty.");
         } else if (birthDate == null){
             date.setError("Birth date must be selected.");
+        } else if (location.equals("Enter Location")) {
+            textViewLocation.setError("Please select your location.");
         } else {
 
                 String gender = buttonGender.getText().toString();
@@ -492,16 +510,6 @@ public class CreateProfile extends AppCompatActivity {
                 user.setPic5(pic5Uri);
                 user.setNotifications(notifications);
 
-                if (GPS != null) {
-                    user.setLocation(GPS);
-                    Toast.makeText(CreateProfile.this, "Location stored.",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    user.setLocation("");
-                    Toast.makeText(CreateProfile.this, "Location not found.",
-                            Toast.LENGTH_SHORT).show();
-                }
-
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     String firebaseID = mAuth.getCurrentUser().getUid();
@@ -518,6 +526,7 @@ public class CreateProfile extends AppCompatActivity {
                 }
             }
         }
+
 
 
     private void updateDB() {
@@ -556,6 +565,7 @@ public class CreateProfile extends AppCompatActivity {
         EditText lastName = findViewById(R.id.editTextLastName);
         EditText username = findViewById(R.id.editTextUsername);
         EditText email = findViewById(R.id.editTextEmail);
+        TextView location = findViewById(R.id.textLocation);
         ImageView profPic = findViewById(R.id.ImageViewProf);
         RadioButton male = findViewById(R.id.radioMale);
         RadioButton female = findViewById(R.id.radioFemale);
@@ -574,6 +584,10 @@ public class CreateProfile extends AppCompatActivity {
         bio.setText(user.getBio());
         email.setText(user.getEmail());
         interests.setText(user.getInterests());
+
+        if (GPS != null){
+            location.setText(GPS);
+        }
         if (!user.getBirthDate().isEmpty()) {
             date.setText(user.getBirthDate());
         }

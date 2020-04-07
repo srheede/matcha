@@ -25,7 +25,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -45,6 +44,8 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -393,8 +394,6 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onLocationChanged(Location location) {
                 GPS = location.getLatitude() + " " + location.getLongitude();
-                Toast.makeText(EditProfile.this, "done",
-                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -465,6 +464,11 @@ public class EditProfile extends AppCompatActivity {
             date.setError("Birth date must be selected.");
         } else {
 
+                if (!interests.isEmpty()) {
+                    interests = filterTags(interests);
+
+                }
+
                 String gender = buttonGender.getText().toString();
                 String sexPref = buttonInterestedIn.getText().toString();
                 String notifications;
@@ -517,6 +521,17 @@ public class EditProfile extends AppCompatActivity {
                 }
             }
         }
+
+    private String filterTags(String interests) {
+
+        Pattern pattern = Pattern.compile("[#][A-Za-z0-9-_]+");
+        Matcher tags = pattern.matcher(interests);
+        interests = "";
+        while (tags.find()){
+           interests = interests.concat(tags.group() + " ");
+        }
+        return interests;
+    }
 
     private void updateUI() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();

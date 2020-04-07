@@ -203,11 +203,17 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         if (dataSnapshot.exists()) {
-                                            progress.setVisibility(View.GONE);
-                                        Toast.makeText(MainActivity.this, "User logged in.",
-                                                Toast.LENGTH_SHORT).show();
-                                            Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
-                                            startActivity(gotoAccount);
+                                            if (firebaseUser.isEmailVerified()) {
+                                                progress.setVisibility(View.GONE);
+                                                Toast.makeText(MainActivity.this, "User logged in.",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
+                                                startActivity(gotoAccount);
+                                            } else {
+                                                progress.setVisibility(View.GONE);
+                                                Toast.makeText(MainActivity.this, "Account not activated. Please activate account first.",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
                                         } else {
                                             progress.setVisibility(View.GONE);
                                             Toast.makeText(MainActivity.this, "Account doesn't exist. Please sign up first.",

@@ -2,13 +2,13 @@ package wethinkcode.co.za.matcha;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,6 +35,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class Account extends AppCompatActivity {
@@ -38,6 +49,10 @@ public class Account extends AppCompatActivity {
     private ViewPager mViewPager;
     private Button buttonYes;
     private Button buttonNo;
+    private String placeId;
+    private AutocompleteSupportFragment autocompleteFragment;
+    private PlacesClient placesClient;
+    private String placeName;
 
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -56,6 +71,12 @@ public class Account extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
+
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU");
+
+        // Create a new Places client instance
+        placesClient = Places.createClient(this);
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(mAuthListener);
@@ -230,6 +251,27 @@ public class Account extends AppCompatActivity {
         ImageView pic3 = findViewById(R.id.imageView3);
         ImageView pic4 = findViewById(R.id.imageView4);
         ImageView pic5 = findViewById(R.id.imageView5);
+        placeId = user.getLocation();
+        placeName = "";
+
+        // Specify the fields to return.
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Construct a request object, passing the place ID and fields array.
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            placeName = place.getName();
+            location.setText(placeName);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                int statusCode = apiException.getStatusCode();
+                // Handle error with given status code.
+                System.out.println(apiException.getMessage());
+            }
+        });
 
 
         username.setText(user.getUsername());
@@ -305,6 +347,28 @@ public class Account extends AppCompatActivity {
         ImageView pic3 = findViewById(R.id.imageView32);
         ImageView pic4 = findViewById(R.id.imageView42);
         ImageView pic5 = findViewById(R.id.imageView52);
+
+        placeId = user.getLocation();
+        placeName = "";
+
+        // Specify the fields to return.
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Construct a request object, passing the place ID and fields array.
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            placeName = place.getName();
+            location.setText(placeName);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                int statusCode = apiException.getStatusCode();
+                // Handle error with given status code.
+                System.out.println(apiException.getMessage());
+            }
+        });
 
 
         username.setText(user.getUsername());

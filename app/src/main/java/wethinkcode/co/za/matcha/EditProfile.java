@@ -10,10 +10,10 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,9 +25,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,8 +50,10 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +87,10 @@ public class EditProfile extends AppCompatActivity {
     private TextView date;
     private String birthDate;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
+    private String placeId;
+    private AutocompleteSupportFragment autocompleteFragment;
+    private PlacesClient placesClient;
+    private String placeName;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -94,6 +108,34 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editprofile);
         Button buttonSave;
+
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU");
+
+        // Create a new Places client instance
+        placesClient = Places.createClient(this);
+
+        // Initialize the AutocompleteSupportFragment.
+        autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                placeId = place.getId();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                System.out.println(status);
+            }
+        });
 
         date = findViewById(R.id.textViewDate);
 
@@ -226,8 +268,6 @@ public class EditProfile extends AppCompatActivity {
             case 10:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     locationManager.requestLocationUpdates("gps", 900000, 10000, locationListener);
-                    Toast.makeText(EditProfile.this, "done",
-                            Toast.LENGTH_SHORT).show();
                 }
         }
     }
@@ -496,16 +536,7 @@ public class EditProfile extends AppCompatActivity {
                 user.setPic4(pic4Uri);
                 user.setPic5(pic5Uri);
                 user.setNotifications(notifications);
-
-                if (GPS != null) {
-                    user.setLocation(GPS);
-                    Toast.makeText(EditProfile.this, "Locatin stored.",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    user.setLocation("");
-                    Toast.makeText(EditProfile.this, "Location not found.",
-                            Toast.LENGTH_SHORT).show();
-                }
+                user.setLocation(placeId);
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
@@ -586,6 +617,28 @@ public class EditProfile extends AppCompatActivity {
         email.setText(user.getEmail());
         interests.setText(user.getInterests());
         date.setText(user.getBirthDate());
+        placeId = user.getLocation();
+        placeName = "";
+
+        // Specify the fields to return.
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Construct a request object, passing the place ID and fields array.
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            placeName = place.getName();
+            autocompleteFragment.setText(placeName);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                int statusCode = apiException.getStatusCode();
+                // Handle error with given status code.
+                System.out.println(apiException.getMessage());
+            }
+        });
+
         if (!user.getProfPic().isEmpty()) {
             Picasso.with(this).load(user.getProfPic()).into(profPic);
             profPicUri = user.getProfPic();

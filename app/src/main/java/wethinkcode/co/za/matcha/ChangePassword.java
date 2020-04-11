@@ -1,6 +1,6 @@
 package wethinkcode.co.za.matcha;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class ChangePassword extends AppCompatActivity {

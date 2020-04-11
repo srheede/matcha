@@ -10,15 +10,19 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
@@ -26,11 +30,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 //import com.google.android.libraries.places.api.Places;
 //import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -45,8 +59,13 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class CreateProfile extends AppCompatActivity {
 
@@ -76,9 +95,11 @@ public class CreateProfile extends AppCompatActivity {
     private RadioButton buttonInterestedIn;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private TextView date;
-    private TextView location;
     private String birthDate;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
+    private String placeId;
+    private String geoHash;
+    private AutocompleteSupportFragment autocompleteFragment;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -97,14 +118,36 @@ public class CreateProfile extends AppCompatActivity {
         setContentView(R.layout.activity_createprofile);
         Button buttonSave;
 
-//        // Initialize the SDK
-//        Places.initialize(getApplicationContext(), "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU");
-//
-//        // Create a new Places client instance
-//        PlacesClient placesClient = Places.createClient(this);
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU");
+
+        // Create a new Places client instance
+        PlacesClient placesClient = Places.createClient(this);
+
+        // Initialize the AutocompleteSupportFragment.
+        autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+
+        // Specify the types of place data to return.
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                placeId = place.getId();
+                place.getLatLng();
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                System.out.println(status);
+            }
+        });
 
         date = findViewById(R.id.textViewDate);
-        location = findViewById(R.id.textLocation);
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,13 +162,6 @@ public class CreateProfile extends AppCompatActivity {
                         mDateSetListener, year, month, day);
                 dialog.getWindow(); //.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
-            }
-        });
-
-        location.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
 
@@ -427,9 +463,9 @@ public class CreateProfile extends AppCompatActivity {
             }
         };
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION,
                     android.Manifest.permission.INTERNET
             }, 10);
             return;
@@ -457,8 +493,8 @@ public class CreateProfile extends AppCompatActivity {
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextUsername = findViewById(R.id.editTextUsername);
         EditText editTextInterests = findViewById(R.id.editTextInterests);
-        TextView textViewLocation = findViewById(R.id.textLocation);
         Switch switchNotifications = findViewById(R.id.switchNotifications);
+        TextView location = findViewById(R.id.textViewLocation);
 
         String firstName = editTextFirstName.getText().toString();
         String lastName = editTextLastName.getText().toString();
@@ -466,7 +502,6 @@ public class CreateProfile extends AppCompatActivity {
         String email = editTextEmail.getText().toString();
         String username = editTextUsername.getText().toString();
         String interests = editTextInterests.getText().toString();
-        String location = textViewLocation.getText().toString();
 
         if (username.isEmpty()) {
             editTextUsername.setError("Field can't be empty.");
@@ -476,10 +511,10 @@ public class CreateProfile extends AppCompatActivity {
             editTextLastName.setError("Field can't be empty.");
         } else if (email.isEmpty()) {
             editTextEmail.setError("Field can't be empty.");
+        } else if (placeId == null) {
+            location.setError("Field can't be empty.");
         } else if (birthDate == null){
             date.setError("Birth date must be selected.");
-        } else if (location.equals("Enter Location")) {
-            textViewLocation.setError("Please select your location.");
         } else {
 
                 String gender = buttonGender.getText().toString();
@@ -509,6 +544,7 @@ public class CreateProfile extends AppCompatActivity {
                 user.setPic4(pic4Uri);
                 user.setPic5(pic5Uri);
                 user.setNotifications(notifications);
+                user.setLocation(placeId);
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
@@ -559,13 +595,13 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     private void fillForm(User user) {
+
         EditText firstName = findViewById(R.id.editTextFirstName);
         EditText bio = findViewById(R.id.editTextBio);
         EditText interests = findViewById(R.id.editTextInterests);
         EditText lastName = findViewById(R.id.editTextLastName);
         EditText username = findViewById(R.id.editTextUsername);
         EditText email = findViewById(R.id.editTextEmail);
-        TextView location = findViewById(R.id.textLocation);
         ImageView profPic = findViewById(R.id.ImageViewProf);
         RadioButton male = findViewById(R.id.radioMale);
         RadioButton female = findViewById(R.id.radioFemale);
@@ -585,9 +621,7 @@ public class CreateProfile extends AppCompatActivity {
         email.setText(user.getEmail());
         interests.setText(user.getInterests());
 
-        if (GPS != null){
-            location.setText(GPS);
-        }
+
         if (!user.getBirthDate().isEmpty()) {
             date.setText(user.getBirthDate());
         }

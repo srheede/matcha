@@ -1,3 +1,2 @@
 /build
-.xml
-app/src/main
+app/src/main/res/values/apiKey.xml

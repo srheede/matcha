@@ -110,7 +110,7 @@ public class EditProfile extends AppCompatActivity {
         Button buttonSave;
 
         // Initialize the SDK
-        Places.initialize(getApplicationContext(), "AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU");
+        Places.initialize(getApplicationContext(), getString(R.string.API_KEY));
 
         // Create a new Places client instance
         placesClient = Places.createClient(this);

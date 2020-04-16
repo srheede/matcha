@@ -11,7 +11,7 @@ public class FragSettings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_messages, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         return rootView;
     }

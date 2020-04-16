@@ -13,7 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,10 +53,11 @@ public class Account extends AppCompatActivity {
     private Button buttonYes;
     private Button buttonNo;
     private String placeId;
-    private AutocompleteSupportFragment autocompleteFragment;
+    private AutocompleteSupportFragment locationFilterFragment;
     private PlacesClient placesClient;
     private String placeName;
-
+    private RadioGroup radioSortBy;
+    private RadioButton buttonSortBy;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -80,6 +84,8 @@ public class Account extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(mAuthListener);
+
+        radioSortBy = findViewById(R.id.radioSortBy);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -123,6 +129,12 @@ public class Account extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void sortByClick(View view) {
+        int sortByID = radioSortBy.getCheckedRadioButtonId();
+
+        buttonSortBy = findViewById(sortByID);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -232,6 +244,10 @@ public class Account extends AppCompatActivity {
         user.setPic5(data.child("pic5").getValue(String.class));
         user.setSexPref(data.child("sexPref").getValue(String.class));
         user.setNotifications(data.child("notifications").getValue(String.class));
+        user.setSortBy(data.child("sortBy").getValue(String.class));
+        user.setFilterDistance(data.child("filterDistance").getValue(String.class));
+        user.setFilterInterests(data.child("filterInterests").getValue(String.class));
+        user.setFilterLocation(data.child("filterLocation").getValue(String.class));
         return (user);
     }
 
@@ -251,6 +267,7 @@ public class Account extends AppCompatActivity {
         ImageView pic3 = findViewById(R.id.imageView3);
         ImageView pic4 = findViewById(R.id.imageView4);
         ImageView pic5 = findViewById(R.id.imageView5);
+
         placeId = user.getLocation();
         placeName = "";
 
@@ -272,7 +289,6 @@ public class Account extends AppCompatActivity {
                 System.out.println(apiException.getMessage());
             }
         });
-
 
         username.setText(user.getUsername());
         email.setText(user.getEmail());
@@ -309,6 +325,76 @@ public class Account extends AppCompatActivity {
             Picasso.with(this).load(user.getPic5()).into(pic5);
         } else {
             pic5.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void fillFormSettings(User user) {
+
+        // Initialize the SDK
+        Places.initialize(getApplicationContext(), getString(R.string.API_KEY));
+
+        // Create a new Places client instance
+        placesClient = Places.createClient(this);
+
+        // Initialize the AutocompleteSupportFragment.
+        locationFilterFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_filter_fragment);
+
+        // Specify the types of place data to return.
+        locationFilterFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+
+        // Set up a PlaceSelectionListener to handle the response.
+        locationFilterFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                // TODO: Get info about the selected place.
+                placeId = place.getId();
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // TODO: Handle the error.
+                System.out.println(status);
+            }
+        });
+
+        RadioButton sortByLocation = findViewById(R.id.radioLocation);
+        RadioButton sortByPopularity = findViewById(R.id.radioPopularity);
+        RadioButton sortByBoth = findViewById(R.id.radioSortBoth);
+        EditText filterInterests = findViewById(R.id.editTextFilterInterests);
+
+        placeId = user.getFilterLocation();
+        placeName = "";
+
+        // Specify the fields to return.
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);
+
+        // Construct a request object, passing the place ID and fields array.
+        FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+
+        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+            Place place = response.getPlace();
+            placeName = place.getName();
+            locationFilterFragment.setText(placeName);
+        }).addOnFailureListener((exception) -> {
+            if (exception instanceof ApiException) {
+                ApiException apiException = (ApiException) exception;
+                int statusCode = apiException.getStatusCode();
+                // Handle error with given status code.
+                System.out.println(apiException.getMessage());
+            }
+        });
+
+        filterInterests.setText(user.getFilterInterests());
+
+        if (user.getSortBy().equalsIgnoreCase("location")) {
+            sortByLocation.toggle();
+        }
+        if (user.getSortBy().equalsIgnoreCase("popularity")) {
+            sortByPopularity.toggle();
+        }
+        if (user.getSortBy().equalsIgnoreCase("both")) {
+            sortByBoth.toggle();
         }
     }
 

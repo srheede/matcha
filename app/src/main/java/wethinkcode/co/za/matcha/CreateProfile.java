@@ -14,34 +14,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.login.LoginManager;
-import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-//import com.google.android.libraries.places.api.Places;
-//import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
@@ -61,11 +52,10 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static wethinkcode.co.za.matcha.GeoHash.encodeHash;
 
 public class CreateProfile extends AppCompatActivity {
 
@@ -129,7 +119,7 @@ public class CreateProfile extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
         // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -137,7 +127,9 @@ public class CreateProfile extends AppCompatActivity {
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 placeId = place.getId();
-                place.getLatLng();
+                LatLng latLng = place.getLatLng();
+                if (latLng != null) {
+                geoHash = encodeHash(latLng.latitude, latLng.longitude, 12); }
             }
 
             @Override
@@ -545,6 +537,11 @@ public class CreateProfile extends AppCompatActivity {
                 user.setPic5(pic5Uri);
                 user.setNotifications(notifications);
                 user.setLocation(placeId);
+                user.setGeoHash(geoHash);
+                user.setFilterLocation("");
+                user.setFilterInterests("");
+                user.setFilterDistance("");
+                user.setSortBy("Both");
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {

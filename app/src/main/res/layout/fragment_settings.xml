@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--tools:context=".Account$PlaceholderFragment">-->
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
+
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" />
+
+                    <TextView
+                        android:id="@+id/textViewSortBy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:text="Sort By:" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent" />
+
+                <RadioGroup
+                    android:id="@+id/radioSortBy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <RadioButton
+                        android:id="@+id/radioLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="sortByClick"
+                        android:text="Location" />
+
+                    <RadioButton
+                        android:id="@+id/radioPopularity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="sortByClick"
+                        android:text="Popularity" />
+
+                    <RadioButton
+                        android:id="@+id/radioSortBoth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="sortByClick"
+                        android:text="both" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+            <TextView
+                android:id="@+id/textViewFilters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Filters" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <TextView
+                android:id="@+id/textViewDistance"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Distance:" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <SeekBar
+                android:id="@+id/seekBar"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+
+            <EditText
+                android:id="@+id/editTextFilterInterests"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ems="10"
+                android:hint="Interests"
+                android:inputType="textMultiLine" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/textViewLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:text="@string/location" />
+
+                    <fragment android:id="@+id/autocomplete_filter_fragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                        />
+
+                    <Space
+                        android:layout_width="300dp"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <Button
+                android:id="@+id/buttonSave"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Save Changes" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

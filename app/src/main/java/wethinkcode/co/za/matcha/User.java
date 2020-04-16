@@ -19,6 +19,52 @@ public class User {
     private String  pic5;
     private String  location;
     private String  notifications;
+    private String  sortBy;
+    private String  filterDistance;
+    private String  filterInterests;
+    private String  filterLocation;
+
+    public String getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
+    }
+
+    public String getFilterDistance() {
+        return filterDistance;
+    }
+
+    public void setFilterDistance(String filterDistance) {
+        this.filterDistance = filterDistance;
+    }
+
+    public String getFilterInterests() {
+        return filterInterests;
+    }
+
+    public void setFilterInterests(String filterInterests) {
+        this.filterInterests = filterInterests;
+    }
+
+    public String getFilterLocation() {
+        return filterLocation;
+    }
+
+    public void setFilterLocation(String filterLocation) {
+        this.filterLocation = filterLocation;
+    }
+
+    public String getGeoHash() {
+        return geoHash;
+    }
+
+    public void setGeoHash(String geoHash) {
+        this.geoHash = geoHash;
+    }
+
+    private String  geoHash;
 
     public User(){
         platform = "matcha";

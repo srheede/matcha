@@ -58,10 +58,6 @@
             </LinearLayout>
 
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -130,7 +126,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="45dp" />
 
             <TextView
                 android:id="@+id/textViewFilters"
@@ -141,7 +137,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="15dp" />
 
             <TextView
                 android:id="@+id/textViewDistance"
@@ -196,11 +192,11 @@
                         android:layout_gravity="top"
                         android:text="@string/location" />
 
-                    <fragment android:id="@+id/autocomplete_filter_fragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <fragment
+                        android:id="@+id/autocomplete_filter_fragment"
                         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                        />
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
                     <Space
                         android:layout_width="300dp"
@@ -214,7 +210,7 @@
                 android:layout_height="30dp" />
 
             <Button
-                android:id="@+id/buttonSave"
+                android:id="@+id/buttonSettings"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

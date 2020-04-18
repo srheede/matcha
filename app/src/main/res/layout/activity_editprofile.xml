@@ -374,7 +374,7 @@
                     android:text="@string/location" />
 
                 <fragment
-                    android:id="@+id/autocomplete_filterfragment"
+                    android:id="@+id/autocompletefragment"
                     android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

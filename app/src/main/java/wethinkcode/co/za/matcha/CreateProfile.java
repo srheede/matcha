@@ -118,26 +118,29 @@ public class CreateProfile extends AppCompatActivity {
         autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+        if (autocompleteFragment != null) {
+            // Specify the types of place data to return.
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                placeId = place.getId();
-                LatLng latLng = place.getLatLng();
-                if (latLng != null) {
-                geoHash = encodeHash(latLng.latitude, latLng.longitude, 12); }
-            }
+            // Set up a PlaceSelectionListener to handle the response.
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    // TODO: Get info about the selected place.
+                    placeId = place.getId();
+                    LatLng latLng = place.getLatLng();
+                    if (latLng != null) {
+                        geoHash = encodeHash(latLng.latitude, latLng.longitude, 12);
+                    }
+                }
 
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                System.out.println(status);
-            }
-        });
+                @Override
+                public void onError(Status status) {
+                    // TODO: Handle the error.
+                    System.out.println(status);
+                }
+            });
+        }
 
         date = findViewById(R.id.textViewDate);
 
@@ -497,16 +500,28 @@ public class CreateProfile extends AppCompatActivity {
 
         if (username.isEmpty()) {
             editTextUsername.setError("Field can't be empty.");
+            Toast.makeText(CreateProfile.this, "Please enter a username.",
+                    Toast.LENGTH_SHORT).show();
         } else if (firstName.isEmpty()) {
             editTextFirstName.setError("Field can't be empty.");
+            Toast.makeText(CreateProfile.this, "Please enter your first name.",
+                    Toast.LENGTH_SHORT).show();
         } else if (lastName.isEmpty()) {
             editTextLastName.setError("Field can't be empty.");
+            Toast.makeText(CreateProfile.this, "Please enter your last name.",
+                    Toast.LENGTH_SHORT).show();
         } else if (email.isEmpty()) {
             editTextEmail.setError("Field can't be empty.");
+            Toast.makeText(CreateProfile.this, "Please enter your email address.",
+                    Toast.LENGTH_SHORT).show();
         } else if (placeId == null) {
             location.setError("Field can't be empty.");
+            Toast.makeText(CreateProfile.this, "Please select your location.",
+                    Toast.LENGTH_SHORT).show();
         } else if (birthDate == null){
             date.setError("Birth date must be selected.");
+            Toast.makeText(CreateProfile.this, "Please enter your birth date.",
+                    Toast.LENGTH_SHORT).show();
         } else {
 
                 String gender = buttonGender.getText().toString();

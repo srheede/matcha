@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -56,6 +57,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static wethinkcode.co.za.matcha.GeoHash.encodeHash;
 
 public class EditProfile extends AppCompatActivity {
 
@@ -91,6 +94,8 @@ public class EditProfile extends AppCompatActivity {
     private AutocompleteSupportFragment autocompleteFragment;
     private PlacesClient placesClient;
     private String placeName;
+    private String geoHash;
+    private User user;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -117,25 +122,30 @@ public class EditProfile extends AppCompatActivity {
 
         // Initialize the AutocompleteSupportFragment.
         autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+                getSupportFragmentManager().findFragmentById(R.id.autocompletefragment);
 
-        // Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        if (autocompleteFragment != null) {
+            // Specify the types of place data to return.
+            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
 
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                placeId = place.getId();
-            }
+            // Set up a PlaceSelectionListener to handle the response.
+            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+                @Override
+                public void onPlaceSelected(Place place) {
+                    // TODO: Get info about the selected place.
+                    placeId = place.getId();
+                    LatLng latLng = place.getLatLng();
+                    if (latLng != null) {
+                        geoHash = encodeHash(latLng.latitude, latLng.longitude, 12); }
+                }
 
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                System.out.println(status);
-            }
-        });
+                @Override
+                public void onError(Status status) {
+                    // TODO: Handle the error.
+                    System.out.println(status);
+                }
+            });
+        }
 
         date = findViewById(R.id.textViewDate);
 
@@ -494,14 +504,24 @@ public class EditProfile extends AppCompatActivity {
 
         if (username.isEmpty()) {
             editTextUsername.setError("Field can't be empty.");
+            Toast.makeText(EditProfile.this, "Please enter a username.",
+                    Toast.LENGTH_SHORT).show();
         } else if (firstName.isEmpty()) {
             editTextFirstName.setError("Field can't be empty.");
+            Toast.makeText(EditProfile.this, "Please enter your first name.",
+                    Toast.LENGTH_SHORT).show();
         } else if (lastName.isEmpty()) {
             editTextLastName.setError("Field can't be empty.");
+            Toast.makeText(EditProfile.this, "Please enter your last name.",
+                    Toast.LENGTH_SHORT).show();
         } else if (email.isEmpty()) {
             editTextEmail.setError("Field can't be empty.");
+            Toast.makeText(EditProfile.this, "Please enter your email address.",
+                    Toast.LENGTH_SHORT).show();
         } else if (birthDate == null){
             date.setError("Birth date must be selected.");
+            Toast.makeText(EditProfile.this, "Please enter your birth date.",
+                    Toast.LENGTH_SHORT).show();
         } else {
 
                 if (!interests.isEmpty()) {
@@ -518,8 +538,6 @@ public class EditProfile extends AppCompatActivity {
                 } else {
                     notifications = "no";
                 }
-
-                User user = new User();
 
                 user.setFirstName(firstName);
                 user.setSexPref(sexPref);
@@ -575,7 +593,7 @@ public class EditProfile extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.child("email").getValue() != null) {
-                        User user = fetchData(dataSnapshot);
+                        user = fetchData(dataSnapshot);
                         fillForm(user);
                     }
                 }
@@ -709,6 +727,12 @@ public class EditProfile extends AppCompatActivity {
         user.setPic5(data.child("pic5").getValue(String.class));
         user.setSexPref(data.child("sexPref").getValue(String.class));
         user.setNotifications(data.child("notifications").getValue(String.class));
+        user.setFilterLocation(data.child("filterLocation").getValue(String.class));
+        user.setFilterInterests(data.child("filterInterests").getValue(String.class));
+        user.setFilterDistance(data.child("filterDistance").getValue(String.class));
+        user.setSortBy(data.child("sortBy").getValue(String.class));
+        user.setGeoHash(data.child("geoHash").getValue(String.class));
+
         return (user);
     }
 }

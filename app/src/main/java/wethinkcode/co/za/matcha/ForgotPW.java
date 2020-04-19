@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class ForgotPW extends AppCompatActivity {
 
     private TextView Email;
-    private Button Reset;
     private FirebaseAuth mAuth;
 
     @Override
@@ -25,10 +24,10 @@ public class ForgotPW extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_pw);
 
         Email = findViewById(R.id.email);
-        Reset = findViewById(R.id.buttonReset);
+        Button reset = findViewById(R.id.buttonReset);
         mAuth = FirebaseAuth.getInstance();
 
-        Reset.setOnClickListener(new View.OnClickListener() {
+        reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mAuth.sendPasswordResetEmail(Email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {

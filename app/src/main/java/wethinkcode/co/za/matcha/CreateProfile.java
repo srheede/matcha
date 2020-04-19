@@ -89,7 +89,6 @@ public class CreateProfile extends AppCompatActivity {
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
     private String placeId;
     private String geoHash;
-    private AutocompleteSupportFragment autocompleteFragment;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -115,7 +114,7 @@ public class CreateProfile extends AppCompatActivity {
         PlacesClient placesClient = Places.createClient(this);
 
         // Initialize the AutocompleteSupportFragment.
-        autocompleteFragment = (AutocompleteSupportFragment)
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
         if (autocompleteFragment != null) {
@@ -135,7 +134,7 @@ public class CreateProfile extends AppCompatActivity {
                 }
 
                 @Override
-                public void onError(Status status) {
+                public void onError(@NonNull Status status) {
                     // TODO: Handle the error.
                     System.out.println(status);
                 }

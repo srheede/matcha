@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +13,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
-import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,17 +39,13 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class FragSettings extends Fragment {
 
-    private String placeId;
     private String placeName;
-    private Button buttonSettings;
     private RadioButton sortByLocation;
     private RadioButton sortByPopularity;
     private RadioButton sortByBoth;
     private EditText filterInterests;
-    private RadioGroup radioSortBy;
     public static RadioButton buttonSortBy;
     private String filterPlaceId;
-    private View rootView;
     private FirebaseAuth mAuth;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
     private User user;
@@ -62,17 +54,17 @@ public class FragSettings extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
 
         mAuth = FirebaseAuth.getInstance();
 
-        radioSortBy = rootView.findViewById(R.id.radioSortBy);
+        RadioGroup radioSortBy = rootView.findViewById(R.id.radioSortBy);
         sortByLocation = rootView.findViewById(R.id.radioLocation);
         sortByPopularity = rootView.findViewById(R.id.radioPopularity);
         sortByBoth = rootView.findViewById(R.id.radioSortBoth);
         filterInterests = rootView.findViewById(R.id.editTextFilterInterests);
-        buttonSettings = rootView.findViewById(R.id.buttonSettings);
+        Button buttonSettings = rootView.findViewById(R.id.buttonSettings);
         int sortByID = radioSortBy.getCheckedRadioButtonId();
         buttonSortBy = rootView.findViewById(sortByID);
 
@@ -152,7 +144,7 @@ public class FragSettings extends Fragment {
                     }
                 });
             }
-        placeId = user.getFilterLocation();
+        String placeId = user.getFilterLocation();
         placeName = "";
 
         // Specify the fields to return.

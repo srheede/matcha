@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,13 +33,7 @@ public class FragMatcha extends Fragment {
 
     private FirebaseAuth mAuth;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
-    private Account.SectionsPagerAdapter mSectionsPagerAdapter;
-    private ViewPager mViewPager;
     private String placeName;
-    private FragUserProfile fragUserProfile;
-    private FragMatcha fragMatcha;
-    private FragSettings fragSettings;
-    private User user;
     private User matcha;
     private View rootView;
 

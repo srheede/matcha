@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
@@ -27,7 +31,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static wethinkcode.co.za.matcha.GeoHash.decodeHash;
 
 public class FragMatcha extends Fragment {
 
@@ -36,6 +44,10 @@ public class FragMatcha extends Fragment {
     private String placeName;
     private User matcha;
     private View rootView;
+    private User user;
+    private Boolean matchFound;
+    private Double radius = Double.valueOf(1);
+    private String matchKey;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -174,6 +186,124 @@ public class FragMatcha extends Fragment {
     }
 
     private String selectNextMatch(String uid) {
+
+//        Query query = users.child(uid);
+//        final String[] geoHash = {null};
+//
+//        query.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.child("email").getValue() != null) {
+//                    geoHash[0] = dataSnapshot.child("geoHash").getValue(String.class);
+//
+//                }
+//                System.out.println("okay");
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
+//        final LatLong latLong = decodeHash("k3vp50pvrd5k");
+//
+//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
+//        GeoFire geoFire = new GeoFire(ref);
+//
+//        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLong.getLat(), latLong.getLon()), radius);
+//        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+//            @Override
+//            public void onKeyEntered(String key, GeoLocation location) {
+//                if (!matchFound){
+//                    matchFound = true;
+//                    matchKey = key;
+//                }
+//            }
+//
+//            @Override
+//            public void onKeyExited(String key) {
+//
+//            }
+//
+//            @Override
+//            public void onKeyMoved(String key, GeoLocation location) {
+//
+//            }
+//
+//            @Override
+//            public void onGeoQueryReady() {
+//                if (!matchFound){
+//                    radius = radius + 1;
+//                    selectNextMatch(uid);
+//                }
+//                System.out.println("here");
+//            }
+//
+//            @Override
+//            public void onGeoQueryError(DatabaseError error) {
+//                System.out.println("error");
+//            }
+//        });
+
+//        Query query;
+//        final String[] uids = new String[1];
+//
+//        switch (user.getSortBy()) {
+//            case "location":
+//                query = users.orderByChild("geoHash").limitToFirst(1);
+//            case "popularity":
+//                query = users.orderByChild("rating").limitToFirst(1);
+//            case "both":
+//                query = users.orderByChild("geoHash").limitToFirst(1);
+//            default:
+//                query = users.orderByChild("geoHash").limitToFirst(1);
+//        }
+//
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()){
+//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+//                        uids[0] = snapshot.getKey();
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+
         return uid;
     }
+
+//    private void updateUI() {
+//        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+//        if (firebaseUser != null) {
+//            String firebaseID = mAuth.getCurrentUser().getUid();
+//            Query query = users.child(firebaseID);
+//
+//            query.addValueEventListener(new ValueEventListener() {
+//
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                    if (dataSnapshot.child("email").getValue() != null) {
+//                        user = Account.fetchData(dataSnapshot);
+//                        nextMatch();
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+//        } else {
+//            Toast.makeText(getActivity(), "User not found in updateUI.",
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//    }
 }

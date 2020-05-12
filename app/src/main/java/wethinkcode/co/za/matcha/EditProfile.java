@@ -25,6 +25,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -58,6 +60,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static wethinkcode.co.za.matcha.GeoHash.decodeHash;
 import static wethinkcode.co.za.matcha.GeoHash.encodeHash;
 
 public class EditProfile extends AppCompatActivity {
@@ -96,6 +99,7 @@ public class EditProfile extends AppCompatActivity {
     private String placeName;
     private String geoHash;
     private User user;
+    private LatLong latLng;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -134,9 +138,10 @@ public class EditProfile extends AppCompatActivity {
                 public void onPlaceSelected(Place place) {
                     // TODO: Get info about the selected place.
                     placeId = place.getId();
-                    LatLng latLng = place.getLatLng();
-                    if (latLng != null) {
-                        geoHash = encodeHash(latLng.latitude, latLng.longitude, 12); }
+                    LatLng latLong = place.getLatLng();
+                    if (latLong != null) {
+                        geoHash = encodeHash(latLong.latitude, latLong.longitude, 10); }
+                        latLng = decodeHash(geoHash);
                 }
 
                 @Override
@@ -555,10 +560,26 @@ public class EditProfile extends AppCompatActivity {
                 user.setPic5(pic5Uri);
                 user.setNotifications(notifications);
                 user.setLocation(placeId);
+                user.setGeoHash(geoHash);
 
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     String firebaseID = mAuth.getCurrentUser().getUid();
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
+                    GeoFire geoFire = new GeoFire(ref);
+
+                    geoFire.setLocation(firebaseID, new GeoLocation(latLng.getLat(), latLng.getLon()), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+                            if (error != null) {
+                                System.err.println("There was an error saving the location to GeoFire: " + error);
+                            } else {
+                                System.out.println("Location saved on server successfully!");
+                            }
+                        }
+                    });
+
                     try {
                         users.child(firebaseID).setValue(user);
                         Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
@@ -634,9 +655,12 @@ public class EditProfile extends AppCompatActivity {
         bio.setText(user.getBio());
         email.setText(user.getEmail());
         interests.setText(user.getInterests());
-        date.setText(user.getBirthDate());
+        birthDate = user.getBirthDate();
+        date.setText(birthDate);
         placeId = user.getLocation();
         placeName = "";
+        geoHash = user.getGeoHash();
+        latLng = decodeHash(geoHash);
 
         // Specify the fields to return.
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME);

@@ -26,6 +26,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.facebook.login.LoginManager;
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,6 +38,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -89,6 +92,7 @@ public class CreateProfile extends AppCompatActivity {
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
     private String placeId;
     private String geoHash;
+    private LatLng latLng;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -127,9 +131,9 @@ public class CreateProfile extends AppCompatActivity {
                 public void onPlaceSelected(Place place) {
                     // TODO: Get info about the selected place.
                     placeId = place.getId();
-                    LatLng latLng = place.getLatLng();
+                    latLng = place.getLatLng();
                     if (latLng != null) {
-                        geoHash = encodeHash(latLng.latitude, latLng.longitude, 12);
+                        geoHash = encodeHash(latLng.latitude, latLng.longitude, 10);
                     }
                 }
 
@@ -560,6 +564,21 @@ public class CreateProfile extends AppCompatActivity {
                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     String firebaseID = mAuth.getCurrentUser().getUid();
+
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
+                    GeoFire geoFire = new GeoFire(ref);
+
+                    geoFire.setLocation(firebaseID, new GeoLocation(latLng.latitude, latLng.longitude), new GeoFire.CompletionListener() {
+                        @Override
+                        public void onComplete(String key, DatabaseError error) {
+                            if (error != null) {
+                                System.err.println("There was an error saving the location to GeoFire: " + error);
+                            } else {
+                                System.out.println("Location saved on server successfully!");
+                            }
+                        }
+                    });
+
                     try {
                         users.child(firebaseID).setValue(user);
                         Toast.makeText(CreateProfile.this, "User account created.",

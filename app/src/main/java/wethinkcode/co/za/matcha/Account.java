@@ -157,6 +157,7 @@ public class Account extends AppCompatActivity {
         newUser.setFilterAgeMax(data.child("filterAgeMax").getValue(String.class));
         newUser.setFilterAgeMin(data.child("filterAgeMin").getValue(String.class));
         newUser.setPopularity(data.child("popularity").getValue(String.class));
+        newUser.setAge(data.child("age").getValue(String.class));
         return newUser;
     }
 }

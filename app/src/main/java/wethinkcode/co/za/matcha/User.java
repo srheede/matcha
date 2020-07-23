@@ -26,6 +26,15 @@ public class User {
     private String  filterInterests;
     private String  filterLocation;
     private String  popularity;
+    private String  age;
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
 
     public String getPopularity() {
         return popularity;

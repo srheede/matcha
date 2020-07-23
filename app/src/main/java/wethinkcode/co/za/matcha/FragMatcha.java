@@ -156,9 +156,13 @@ public class FragMatcha extends Fragment {
                     int popularity = Integer.parseInt(matcha.getPopularity());
                     matcha.setPopularity(Integer.toString(popularity + 1));
                     users.child(matchKey).setValue(matcha);
-                    matchFound = false;
-                    selectNextMatch();
-                    selectNextMatch();
+                    if (user.getSortBy().equals("location")) {
+                        matchFound = false;
+                        selectNextMatch();
+                    } else {
+                        popular.remove(0);
+                        nextMatch(popular.get(0));
+                    }
                 } catch (Exception e){
                     System.out.println(e);
                 }
@@ -170,8 +174,13 @@ public class FragMatcha extends Fragment {
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                matchFound = false;
-                selectNextMatch();
+                if (user.getSortBy().equals("location")) {
+                    matchFound = false;
+                    selectNextMatch();
+                } else {
+                    popular.remove(0);
+                    nextMatch(popular.get(0));
+                }
             }
         });
 
@@ -270,7 +279,6 @@ public class FragMatcha extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.child("email").getValue() != null) {
 
-
                             Object geoHash = dataSnapshot.child("geoHash").getValue();
 
                             assert geoHash != null;
@@ -332,11 +340,16 @@ public class FragMatcha extends Fragment {
                 System.out.println(dataSnapshot);
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String age = snapshot.child("age").getValue().toString();
+                    String location = snapshot.child("filterLocation").getValue().toString();
                     int Age = Integer.parseInt(age);
                     int filterMinAge = Integer.parseInt(user.getFilterAgeMin());
                     int filterMaxAge = Integer.parseInt(user.getFilterAgeMax());
                     if (Age > filterMinAge && Age < filterMaxAge) {
-                        popular.add(snapshot.getKey());
+                        if (user.getFilterLocation().isEmpty()) {
+                            popular.add(snapshot.getKey());
+                        } else if (user.getFilterLocation().equals(location)) {
+                            popular.add(snapshot.getKey());
+                        }
                     }
                 }
             }
@@ -355,16 +368,60 @@ public class FragMatcha extends Fragment {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 if (!matchFound & !key.equals(firebaseID) & !matched.contains(key)) {
-                    matchKey = key;
-                    matchFound = true;
-                    matched.add(matchKey);
-                    nextMatch(matchKey);
+                    filterMatch(key);
                 } else if (!matchFound & radius < maxRadius) {
                     radius = radius + 10;
                     nearestMatch(geoFire, latLong, firebaseID);
                 } else if (!matchFound){
                     matchFound = true;
                     nextMatch(null);
+                }
+            }
+
+            private void filterMatch(String key) {
+                if (key != null) {
+                    Query query = users.child(key);
+
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.child("email").getValue() != null) {
+                                matcha = Account.fetchData(dataSnapshot);
+
+                                String age = matcha.getAge();
+                                String location = matcha.getFilterLocation();
+                                int Age = Integer.parseInt(age);
+                                int filterMinAge = Integer.parseInt(user.getFilterAgeMin());
+                                int filterMaxAge = Integer.parseInt(user.getFilterAgeMax());
+                                if (Age > filterMinAge && Age < filterMaxAge) {
+                                    if (user.getFilterLocation().isEmpty()) {
+                                        matchKey = key;
+                                        matchFound = true;
+                                        matched.add(matchKey);
+                                        nextMatch(matchKey);
+                                    } else if (user.getFilterLocation().equals(location)) {
+                                        matchKey = key;
+                                        matchFound = true;
+                                        matched.add(matchKey);
+                                        nextMatch(matchKey);
+                                    } else if (!matchFound & radius < maxRadius) {
+                                        radius = radius + 10;
+                                        nearestMatch(geoFire, latLong, firebaseID);
+                                    } else if (!matchFound){
+                                        matchFound = true;
+                                        nextMatch(null);
+                                    }
+                                }
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
                 }
             }
 

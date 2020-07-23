@@ -53,6 +53,8 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -93,6 +95,7 @@ public class CreateProfile extends AppCompatActivity {
     private String placeId;
     private String geoHash;
     private LatLng latLng;
+    private String Age;
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -170,9 +173,15 @@ public class CreateProfile extends AppCompatActivity {
                 birthDate = dayOfMonth + "/" + month + "/" + year;
                 try {
                     SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
-                    SimpleDateFormat format2 = new SimpleDateFormat("dd MMMM yyyy");
+                    SimpleDateFormat format2 = new SimpleDateFormat("dd MM yyyy");
                     Date date = format1.parse(birthDate);
                     birthDate = format2.format(date);
+
+                    LocalDate today = LocalDate.now();
+                    LocalDate birthday = LocalDate.of(year, month, dayOfMonth);
+
+                    Period period = Period.between(birthday, today);
+                    Age = String.valueOf(period.getYears());
                 }
                 catch (Exception e) {
                     Toast.makeText(CreateProfile.this, e.getMessage(),
@@ -525,6 +534,10 @@ public class CreateProfile extends AppCompatActivity {
             date.setError("Birth date must be selected.");
             Toast.makeText(CreateProfile.this, "Please enter your birth date.",
                     Toast.LENGTH_SHORT).show();
+        } else if (Integer.parseInt(Age) < 18) {
+            date.setError("User must be at least 18.");
+            Toast.makeText(CreateProfile.this, "User must be at least 18.",
+                    Toast.LENGTH_SHORT).show();
         } else {
 
                 String gender = buttonGender.getText().toString();
@@ -563,7 +576,7 @@ public class CreateProfile extends AppCompatActivity {
                 user.setFilterAgeMax("100");
                 user.setSortBy("Both");
                 user.setPopularity("0");
-
+                user.setAge(Age);
 
             FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
@@ -763,9 +776,17 @@ public class CreateProfile extends AppCompatActivity {
                 user.setSexPref("");
                 try {
                     SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-                    SimpleDateFormat format2 = new SimpleDateFormat("dd MMMM yyyy");
+                    SimpleDateFormat format2 = new SimpleDateFormat("dd MM yyyy");
+                    SimpleDateFormat format3 = new SimpleDateFormat("yyyy-MM-dd");
                     Date date = format1.parse(data.child("birthday").getValue(String.class));
                     birthDate = format2.format(date);
+                    String ageFormat = format3.format(date);
+
+                    LocalDate today = LocalDate.now();
+                    LocalDate birthday = LocalDate.parse(ageFormat);
+
+                    Period period = Period.between(birthday, today);
+                    Age = String.valueOf(period.getYears());
                 }
                 catch (Exception e) {
                     Toast.makeText(CreateProfile.this, e.getMessage(),

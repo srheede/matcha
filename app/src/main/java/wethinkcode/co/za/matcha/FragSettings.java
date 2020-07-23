@@ -211,11 +211,16 @@ public class FragSettings extends Fragment {
             seekBar.setProgress(maxRadius);
 
             String ageMax = user.getFilterAgeMax();
-            maxAge = Integer.parseInt(ageMax);
+            String ageMin = user.getFilterAgeMin();
+
+            double ratio = 100.0/37.0;
+            int progressMaxAge = (int) ((Integer.parseInt(ageMax) - 18) * ratio) + 1;
+            int progressMinAge = (int) ((Integer.parseInt(ageMin) - 18) * ratio) + 1;
+
+            maxAge = progressMaxAge;
             seekBarMax.setProgress(maxAge);
 
-            String ageMin = user.getFilterAgeMin();
-            minAge = Integer.parseInt(ageMin);
+            minAge = progressMinAge;
             seekBarMin.setProgress(minAge);
 
 

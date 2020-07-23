@@ -53,6 +53,10 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -180,6 +184,12 @@ public class EditProfile extends AppCompatActivity {
                     SimpleDateFormat format2 = new SimpleDateFormat("dd MMMM yyyy");
                     Date date = format1.parse(birthDate);
                     birthDate = format2.format(date);
+
+                    LocalDate today = LocalDate.now();
+                    LocalDate birthday = LocalDate.of(year, month, dayOfMonth);
+
+                    Period period = Period.between(birthday, today);
+                    user.setAge(String.valueOf(period.getYears()));
                 }
                 catch (Exception e) {
                     Toast.makeText(EditProfile.this, e.getMessage(),
@@ -527,6 +537,10 @@ public class EditProfile extends AppCompatActivity {
             date.setError("Birth date must be selected.");
             Toast.makeText(EditProfile.this, "Please enter your birth date.",
                     Toast.LENGTH_SHORT).show();
+        } else if (Integer.parseInt(user.getAge()) < 18) {
+            date.setError("User must be at least 18.");
+            Toast.makeText(EditProfile.this, "User must be at least 18.",
+                    Toast.LENGTH_SHORT).show();
         } else {
 
                 if (!interests.isEmpty()) {
@@ -756,6 +770,10 @@ public class EditProfile extends AppCompatActivity {
         user.setFilterDistance(data.child("filterDistance").getValue(String.class));
         user.setSortBy(data.child("sortBy").getValue(String.class));
         user.setGeoHash(data.child("geoHash").getValue(String.class));
+        user.setAge(data.child("age").getValue(String.class));
+        user.setPopularity(data.child("popularity").getValue(String.class));
+        user.setFilterAgeMax(data.child("filterAgeMax").getValue(String.class));
+        user.setFilterAgeMin(data.child("filterAgeMin").getValue(String.class));
 
         return (user);
     }

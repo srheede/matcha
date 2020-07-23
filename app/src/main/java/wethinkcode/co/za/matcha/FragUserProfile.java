@@ -37,7 +37,6 @@ public class FragUserProfile extends Fragment {
     private User user;
     private View rootView;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class FragUserProfile extends Fragment {
             String firebaseID = mAuth.getCurrentUser().getUid();
             Query query = users.child(firebaseID);
 
-            query.addValueEventListener(new ValueEventListener() {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -94,6 +93,7 @@ public class FragUserProfile extends Fragment {
         ImageView pic3 = rootView.findViewById(R.id.imageView3);
         ImageView pic4 = rootView.findViewById(R.id.imageView4);
         ImageView pic5 = rootView.findViewById(R.id.imageView5);
+        TextView rating = rootView.findViewById(R.id.rating);
 
         String placeId = user.getLocation();
         placeName = "";
@@ -127,6 +127,7 @@ public class FragUserProfile extends Fragment {
         gender.setText(user.getGender());
         interestedIn.setText(user.getSexPref());
         location.setText(user.getLocation());
+        rating.setText(setRating());
 
         if (!user.getProfPic().isEmpty()) {
             Picasso.with(getActivity()).load(user.getProfPic()).into(profPic);
@@ -153,5 +154,34 @@ public class FragUserProfile extends Fragment {
         } else {
             pic5.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private String setRating() {
+
+        String rating = user.getPopularity();
+        String gender = user.getGender();
+        if (gender.equals("Male")){
+            gender = "BOY";
+        } else {
+            gender = "GIRL";
+        }
+
+        int popularity = Integer.parseInt(rating);
+
+        if (popularity <= 2){
+            rating = "NOBODY (" + rating + ")";
+        } else if (popularity <= 4) {
+            rating = "SOMEBODY (" + rating + ")";
+        } else if (popularity <= 6) {
+            rating = "EEEEY! (" + rating + ")";
+        } else if (popularity <= 8) {
+            rating = "LOOK AT YOU! (" + rating + ")";
+        } else if (popularity <= 100) {
+            rating = "YOU GO " + gender + "! (" + rating + ")";
+        } else {
+            rating = "THE BEST! (" + rating + ")";
+        }
+
+        return rating;
     }
 }

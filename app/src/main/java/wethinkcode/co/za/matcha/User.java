@@ -21,8 +21,19 @@ public class User {
     private String  notifications;
     private String  sortBy;
     private String  filterDistance;
+    private String  filterAgeMax;
+    private String  filterAgeMin;
     private String  filterInterests;
     private String  filterLocation;
+    private String  popularity;
+
+    public String getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(String popularity) {
+        this.popularity = popularity;
+    }
 
     public String getSortBy() {
         return sortBy;
@@ -201,5 +212,21 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getFilterAgeMax() {
+        return filterAgeMax;
+    }
+
+    public void setFilterAgeMax(String filterAgeMax) {
+        this.filterAgeMax = filterAgeMax;
+    }
+
+    public String getFilterAgeMin() {
+        return filterAgeMin;
+    }
+
+    public void setFilterAgeMin(String filterAgeMin) {
+        this.filterAgeMin = filterAgeMin;
     }
 }

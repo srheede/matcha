@@ -154,6 +154,9 @@ public class Account extends AppCompatActivity {
         newUser.setFilterDistance(data.child("filterDistance").getValue(String.class));
         newUser.setFilterInterests(data.child("filterInterests").getValue(String.class));
         newUser.setFilterLocation(data.child("filterLocation").getValue(String.class));
+        newUser.setFilterAgeMax(data.child("filterAgeMax").getValue(String.class));
+        newUser.setFilterAgeMin(data.child("filterAgeMin").getValue(String.class));
+        newUser.setPopularity(data.child("popularity").getValue(String.class));
         return newUser;
     }
 }

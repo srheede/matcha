@@ -521,7 +521,7 @@ public class CreateProfile extends AppCompatActivity {
             location.setError("Field can't be empty.");
             Toast.makeText(CreateProfile.this, "Please select your location.",
                     Toast.LENGTH_SHORT).show();
-        } else if (birthDate == null){
+        } else if (birthDate == null) {
             date.setError("Birth date must be selected.");
             Toast.makeText(CreateProfile.this, "Please enter your birth date.",
                     Toast.LENGTH_SHORT).show();
@@ -558,10 +558,14 @@ public class CreateProfile extends AppCompatActivity {
                 user.setGeoHash(geoHash);
                 user.setFilterLocation("");
                 user.setFilterInterests("");
-                user.setFilterDistance("");
+                user.setFilterDistance("5");
+                user.setFilterAgeMin("0");
+                user.setFilterAgeMax("100");
                 user.setSortBy("Both");
+                user.setPopularity("0");
 
-                FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+            FirebaseUser firebaseUser = mAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     String firebaseID = mAuth.getCurrentUser().getUid();
 
@@ -608,7 +612,6 @@ public class CreateProfile extends AppCompatActivity {
                     if (dataSnapshot.child("email").getValue() != null) {
                         User user = fetchData(dataSnapshot);
                         query.removeEventListener(this);
-                        users.child(firebaseID).removeValue();
                         fillForm(user);
                     }
                 }

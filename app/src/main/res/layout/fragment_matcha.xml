@@ -7,6 +7,29 @@
     android:layout_height="match_parent">
     <!--tools:context=".Account$PlaceholderFragment">-->
 
+    <ImageView
+        android:id="@+id/imageViewNo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginBottom="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher_foreground"
+        tools:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/textViewNo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="No more suitable matches."
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewNo" />
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -110,6 +133,7 @@
                     android:layout_height="match_parent" />
 
                 <TextView
+                    android:id="@+id/rating2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

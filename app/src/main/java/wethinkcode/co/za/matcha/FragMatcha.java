@@ -1,5 +1,7 @@
 package wethinkcode.co.za.matcha;
 
+import android.content.Intent;
+import android.graphics.Path;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,8 +18,14 @@ import android.widget.Toast;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,12 +36,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static wethinkcode.co.za.matcha.GeoHash.decodeHash;
 
@@ -44,10 +59,13 @@ public class FragMatcha extends Fragment {
     private String placeName;
     private User matcha;
     private View rootView;
+    private Boolean matchFound = false;
+    private int radius = 10;
+    private int maxRadius = 0;
     private User user;
-    private Boolean matchFound;
-    private Double radius = Double.valueOf(1);
+    private ArrayList<String> matched = new ArrayList<String>();
     private String matchKey;
+    private ArrayList<String> popular = new ArrayList<String>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,16 +74,15 @@ public class FragMatcha extends Fragment {
 
         mAuth = FirebaseAuth.getInstance();
 
-        nextMatch();
+        updateUI();
 
         return rootView;
     }
 
-
-    private void nextMatch() {
+    private void updateUI() {
         FirebaseUser firebaseUser = mAuth.getCurrentUser();
         if (firebaseUser != null) {
-            String firebaseID = selectNextMatch(mAuth.getCurrentUser().getUid());
+            String firebaseID = mAuth.getCurrentUser().getUid();
             Query query = users.child(firebaseID);
 
             query.addValueEventListener(new ValueEventListener() {
@@ -73,8 +90,11 @@ public class FragMatcha extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.child("email").getValue() != null) {
-                        matcha = Account.fetchData(dataSnapshot);
-                        fillFormMatcha(matcha);
+                        user = Account.fetchData(dataSnapshot);
+                        showForm();
+                        int radius = Integer.parseInt(user.getFilterDistance());
+                        maxRadius = radius * radius;
+                        selectNextMatch();
                     }
                 }
 
@@ -84,19 +104,64 @@ public class FragMatcha extends Fragment {
                 }
             });
         } else {
-            Toast.makeText(getActivity(), "No new matches in your area.",
+            Toast.makeText(getActivity(), "User not found in updateUI.",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void fillFormMatcha(User matcha) {
+    private void nextMatch(String firebaseID) {
+        if (firebaseID != null) {
+            Query query = users.child(firebaseID);
+
+            query.addValueEventListener(new ValueEventListener() {
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.child("email").getValue() != null) {
+                        matcha = Account.fetchData(dataSnapshot);
+                        fillFormMatcha();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            hideForm();
+        }
+    }
+
+    private void hideForm() {
+        rootView.findViewById(R.id.scrollView2).setVisibility(View.INVISIBLE);
+        rootView.findViewById(R.id.imageViewNo).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.textViewNo).setVisibility(View.VISIBLE);
+    }
+
+    private void showForm() {
+        rootView.findViewById(R.id.scrollView2).setVisibility(View.VISIBLE);
+        rootView.findViewById(R.id.imageViewNo).setVisibility(View.INVISIBLE);
+        rootView.findViewById(R.id.textViewNo).setVisibility(View.INVISIBLE);
+    }
+
+    private void fillFormMatcha() {
 
         Button buttonYes = rootView.findViewById(R.id.buttonYes);
 
         buttonYes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextMatch();
+                try {
+                    int popularity = Integer.parseInt(matcha.getPopularity());
+                    matcha.setPopularity(Integer.toString(popularity + 1));
+                    users.child(matchKey).setValue(matcha);
+                    matchFound = false;
+                    selectNextMatch();
+                    selectNextMatch();
+                } catch (Exception e){
+                    System.out.println(e);
+                }
             }
         });
 
@@ -105,7 +170,8 @@ public class FragMatcha extends Fragment {
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextMatch();
+                matchFound = false;
+                selectNextMatch();
             }
         });
 
@@ -124,6 +190,8 @@ public class FragMatcha extends Fragment {
         ImageView pic3 = rootView.findViewById(R.id.imageView32);
         ImageView pic4 = rootView.findViewById(R.id.imageView42);
         ImageView pic5 = rootView.findViewById(R.id.imageView52);
+        TextView rating = rootView.findViewById(R.id.rating2);
+
 
         String placeId = matcha.getLocation();
         placeName = "";
@@ -157,6 +225,7 @@ public class FragMatcha extends Fragment {
         gender.setText(matcha.getGender());
         interestedIn.setText(matcha.getSexPref());
         location.setText(matcha.getLocation());
+        rating.setText(setRating());
 
         if (!matcha.getProfPic().isEmpty()) {
             Picasso.with(getActivity()).load(matcha.getProfPic()).into(profPic);
@@ -185,125 +254,139 @@ public class FragMatcha extends Fragment {
         }
     }
 
-    private String selectNextMatch(String uid) {
+    private void selectNextMatch() {
 
-//        Query query = users.child(uid);
-//        final String[] geoHash = {null};
-//
-//        query.addValueEventListener(new ValueEventListener() {
-//
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.child("email").getValue() != null) {
-//                    geoHash[0] = dataSnapshot.child("geoHash").getValue(String.class);
-//
-//                }
-//                System.out.println("okay");
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        if (firebaseUser != null) {
+            String firebaseID = mAuth.getCurrentUser().getUid();
+            if (user.getSortBy().equals("Popularity")) {
+                popularMatch(firebaseID);
+            } else {
+                Query query = users.child(firebaseID);
 
-//        final LatLong latLong = decodeHash("k3vp50pvrd5k");
-//
-//        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
-//        GeoFire geoFire = new GeoFire(ref);
-//
-//        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLong.getLat(), latLong.getLon()), radius);
-//        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
-//            @Override
-//            public void onKeyEntered(String key, GeoLocation location) {
-//                if (!matchFound){
-//                    matchFound = true;
-//                    matchKey = key;
-//                }
-//            }
-//
-//            @Override
-//            public void onKeyExited(String key) {
-//
-//            }
-//
-//            @Override
-//            public void onKeyMoved(String key, GeoLocation location) {
-//
-//            }
-//
-//            @Override
-//            public void onGeoQueryReady() {
-//                if (!matchFound){
-//                    radius = radius + 1;
-//                    selectNextMatch(uid);
-//                }
-//                System.out.println("here");
-//            }
-//
-//            @Override
-//            public void onGeoQueryError(DatabaseError error) {
-//                System.out.println("error");
-//            }
-//        });
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
 
-//        Query query;
-//        final String[] uids = new String[1];
-//
-//        switch (user.getSortBy()) {
-//            case "location":
-//                query = users.orderByChild("geoHash").limitToFirst(1);
-//            case "popularity":
-//                query = users.orderByChild("rating").limitToFirst(1);
-//            case "both":
-//                query = users.orderByChild("geoHash").limitToFirst(1);
-//            default:
-//                query = users.orderByChild("geoHash").limitToFirst(1);
-//        }
-//
-//        query.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if (dataSnapshot.exists()){
-//                    for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-//                        uids[0] = snapshot.getKey();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.child("email").getValue() != null) {
 
-        return uid;
+
+                            Object geoHash = dataSnapshot.child("geoHash").getValue();
+
+                            assert geoHash != null;
+                            final LatLong latLong = decodeHash(geoHash.toString());
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("geofire");
+                            GeoFire geoFire = new GeoFire(ref);
+
+                            nearestMatch(geoFire, latLong, firebaseID);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        } else {
+            Toast.makeText(getActivity(), "User not found in updateUI.",
+                    Toast.LENGTH_SHORT).show();
+        }
+
     }
 
-//    private void updateUI() {
-//        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-//        if (firebaseUser != null) {
-//            String firebaseID = mAuth.getCurrentUser().getUid();
-//            Query query = users.child(firebaseID);
-//
-//            query.addValueEventListener(new ValueEventListener() {
-//
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                    if (dataSnapshot.child("email").getValue() != null) {
-//                        user = Account.fetchData(dataSnapshot);
-//                        nextMatch();
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
-//        } else {
-//            Toast.makeText(getActivity(), "User not found in updateUI.",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    private String setRating() {
+
+        String rating = matcha.getPopularity();
+        String gender = matcha.getGender();
+        if (gender.equals("Male")){
+            gender = "BOY";
+        } else {
+            gender = "GIRL";
+        }
+
+        int popularity = Integer.parseInt(rating);
+
+        if (popularity <= 2){
+            rating = "NOBODY (" + rating + ")";
+        } else if (popularity <= 4) {
+            rating = "SOMEBODY (" + rating + ")";
+        } else if (popularity <= 6) {
+            rating = "EEEEY! (" + rating + ")";
+        } else if (popularity <= 8) {
+            rating = "LOOK AT YOU! (" + rating + ")";
+        } else if (popularity <= 100) {
+            rating = " YOU GO " + gender + "! (" + rating + ")";
+        } else {
+            rating = "THE BEST! (" + rating + ")";
+        }
+
+        return rating;
+    }
+
+    private void popularMatch(String firebaseID) {
+        users.orderByChild("popularity").limitToFirst(100).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                System.out.println(dataSnapshot);
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String age = snapshot.child("age").getValue().toString();
+                    int Age = Integer.parseInt(age);
+                    int filterMinAge = Integer.parseInt(user.getFilterAgeMin());
+                    int filterMaxAge = Integer.parseInt(user.getFilterAgeMax());
+                    if (Age > filterMinAge && Age < filterMaxAge) {
+                        popular.add(snapshot.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void nearestMatch(GeoFire geoFire, LatLong latLong, String firebaseID) {
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLong.getLat(), latLong.getLon()), radius);
+        geoQuery.removeAllListeners();
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                if (!matchFound & !key.equals(firebaseID) & !matched.contains(key)) {
+                    matchKey = key;
+                    matchFound = true;
+                    matched.add(matchKey);
+                    nextMatch(matchKey);
+                } else if (!matchFound & radius < maxRadius) {
+                    radius = radius + 10;
+                    nearestMatch(geoFire, latLong, firebaseID);
+                } else if (!matchFound){
+                    matchFound = true;
+                    nextMatch(null);
+                }
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+    }
 }

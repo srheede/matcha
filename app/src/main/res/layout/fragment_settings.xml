@@ -111,15 +111,6 @@
                         android:onClick="sortByClick"
                         android:text="Popularity" />
 
-                    <RadioButton
-                        android:id="@+id/radioSortBoth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:onClick="sortByClick"
-                        android:text="both" />
-
                 </RadioGroup>
 
             </LinearLayout>
@@ -139,12 +130,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
 
-            <TextView
-                android:id="@+id/textViewDistance"
-                android:layout_width="300dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Distance:" />
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" />
+
+                    <TextView
+                        android:id="@+id/textViewDistance"
+                        android:layout_width="230dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Distance:" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewResult"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="end"
+                    android:text="0km" />
+
+            </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
@@ -152,6 +170,106 @@
 
             <SeekBar
                 android:id="@+id/seekBar"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" />
+
+                    <TextView
+                        android:id="@+id/textViewMinAge"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Min Age:" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewResultMinAge"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="end"
+                    android:text="18" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <SeekBar
+                android:id="@+id/seekBarMinAge"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp" />
+
+                    <TextView
+                        android:id="@+id/textViewMaxAge"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Max Age:" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewResultMaxAge"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="end"
+                    android:text="18" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <SeekBar
+                android:id="@+id/seekBarMaxAge"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center" />
@@ -215,6 +333,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Save Changes" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
 
             <View
                 android:id="@+id/divider"

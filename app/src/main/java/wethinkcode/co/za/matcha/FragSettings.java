@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
@@ -42,13 +44,21 @@ public class FragSettings extends Fragment {
     private String placeName;
     private RadioButton sortByLocation;
     private RadioButton sortByPopularity;
-    private RadioButton sortByBoth;
     private EditText filterInterests;
     public static RadioButton buttonSortBy;
     private String filterPlaceId;
     private FirebaseAuth mAuth;
     private DatabaseReference users = FirebaseDatabase.getInstance().getReference("users");
     private User user;
+    private SeekBar seekBar;
+    private SeekBar seekBarMax;
+    private SeekBar seekBarMin;
+    private TextView distanceResult;
+    private TextView resultMin;
+    private TextView resultMax;
+    private int maxRadius = 0;
+    private int maxAge = 55;
+    private int minAge = 18;
 
 
     @Override
@@ -62,11 +72,89 @@ public class FragSettings extends Fragment {
         RadioGroup radioSortBy = rootView.findViewById(R.id.radioSortBy);
         sortByLocation = rootView.findViewById(R.id.radioLocation);
         sortByPopularity = rootView.findViewById(R.id.radioPopularity);
-        sortByBoth = rootView.findViewById(R.id.radioSortBoth);
+        distanceResult = rootView.findViewById(R.id.textViewResult);
+        resultMin = rootView.findViewById(R.id.textViewResultMinAge);
+        resultMax = rootView.findViewById(R.id.textViewResultMaxAge);
+        seekBar = rootView.findViewById(R.id.seekBar);
+        seekBarMax = rootView.findViewById(R.id.seekBarMaxAge);
+        seekBarMin = rootView.findViewById(R.id.seekBarMinAge);
         filterInterests = rootView.findViewById(R.id.editTextFilterInterests);
         Button buttonSettings = rootView.findViewById(R.id.buttonSettings);
         int sortByID = radioSortBy.getCheckedRadioButtonId();
         buttonSortBy = rootView.findViewById(sortByID);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int effectiveProgress = progress * progress;
+                String result;
+                if (progress == 100) {
+                    result = "max";
+                } else {
+                    result = effectiveProgress + "km";
+                }
+                distanceResult.setText(result);
+                maxRadius = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarMax.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                double ratio = 100.0/37.0;
+                int effectiveProgress = (int) (18 + progress/ratio);
+                if (effectiveProgress < minAge){
+                    effectiveProgress = minAge;
+                }
+                String result = String.valueOf(effectiveProgress);
+                resultMax.setText(result);
+                maxAge = effectiveProgress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        seekBarMin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                double ratio = 100.0/37.0;
+                int effectiveProgress = (int) (18 + progress/ratio);
+                if (effectiveProgress > maxAge){
+                    effectiveProgress = maxAge;
+                }
+                String result = String.valueOf(effectiveProgress);
+                resultMin.setText(result);
+                minAge = effectiveProgress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +205,19 @@ public class FragSettings extends Fragment {
             if (user.getSortBy().equalsIgnoreCase("popularity")) {
                 sortByPopularity.toggle();
             }
-            if (user.getSortBy().equalsIgnoreCase("both")) {
-                sortByBoth.toggle();
-            }
+
+            String filterDistance = user.getFilterDistance();
+            maxRadius = Integer.parseInt(filterDistance);
+            seekBar.setProgress(maxRadius);
+
+            String ageMax = user.getFilterAgeMax();
+            maxAge = Integer.parseInt(ageMax);
+            seekBarMax.setProgress(maxAge);
+
+            String ageMin = user.getFilterAgeMin();
+            minAge = Integer.parseInt(ageMin);
+            seekBarMin.setProgress(minAge);
+
 
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment locationFilterFragment = (AutocompleteSupportFragment)
@@ -179,6 +277,9 @@ public class FragSettings extends Fragment {
         }
 
         user.setSortBy(sortBy);
+        user.setFilterDistance(Integer.toString(maxRadius));
+        user.setFilterAgeMax(Integer.toString(maxAge));
+        user.setFilterAgeMin(Integer.toString(minAge));
 
         if (filterPlaceId != null) {
             user.setFilterLocation(filterPlaceId);}

@@ -78,7 +78,6 @@ public class FragSettings extends Fragment {
         seekBar = rootView.findViewById(R.id.seekBar);
         seekBarMax = rootView.findViewById(R.id.seekBarMaxAge);
         seekBarMin = rootView.findViewById(R.id.seekBarMinAge);
-        filterInterests = rootView.findViewById(R.id.editTextFilterInterests);
         Button buttonSettings = rootView.findViewById(R.id.buttonSettings);
         int sortByID = radioSortBy.getCheckedRadioButtonId();
         buttonSortBy = rootView.findViewById(sortByID);
@@ -197,12 +196,9 @@ public class FragSettings extends Fragment {
 
     public void fillFormSettings(User user) {
 
-            filterInterests.setText(user.getFilterInterests());
-
-            if (user.getSortBy().equalsIgnoreCase("location")) {
+            if (user.getSortBy().equalsIgnoreCase("Location")) {
                 sortByLocation.toggle();
-            }
-            if (user.getSortBy().equalsIgnoreCase("popularity")) {
+            } else {
                 sortByPopularity.toggle();
             }
 
@@ -214,14 +210,14 @@ public class FragSettings extends Fragment {
             String ageMin = user.getFilterAgeMin();
 
             double ratio = 100.0/37.0;
-            int progressMaxAge = (int) ((Integer.parseInt(ageMax) - 18) * ratio) + 1;
-            int progressMinAge = (int) ((Integer.parseInt(ageMin) - 18) * ratio) + 1;
+            int progressMaxAge = (int) ((Integer.parseInt(ageMax) - 18) * ratio);
+            int progressMinAge = (int) ((Integer.parseInt(ageMin) - 18) * ratio);
 
             maxAge = progressMaxAge;
-            seekBarMax.setProgress(maxAge);
+            seekBarMax.setProgress(maxAge + 1);
 
             minAge = progressMinAge;
-            seekBarMin.setProgress(minAge);
+            seekBarMin.setProgress(minAge + 1);
 
 
         // Initialize the AutocompleteSupportFragment.
@@ -247,6 +243,7 @@ public class FragSettings extends Fragment {
                     }
                 });
             }
+
         String placeId = user.getFilterLocation();
         placeName = "";
 
@@ -272,14 +269,7 @@ public class FragSettings extends Fragment {
 
     void saveSettings() {
 
-        String interests = filterInterests.getText().toString();
-
         String sortBy = buttonSortBy.getText().toString();
-
-        if (!interests.isEmpty()) {
-            interests = filterTags(interests);
-            user.setFilterInterests(interests);
-        }
 
         user.setSortBy(sortBy);
         user.setFilterDistance(Integer.toString(maxRadius));

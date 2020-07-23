@@ -156,12 +156,16 @@ public class FragMatcha extends Fragment {
                     int popularity = Integer.parseInt(matcha.getPopularity());
                     matcha.setPopularity(Integer.toString(popularity + 1));
                     users.child(matchKey).setValue(matcha);
-                    if (user.getSortBy().equals("location")) {
+                    if (user.getSortBy().equals("Location")) {
                         matchFound = false;
                         selectNextMatch();
                     } else {
                         popular.remove(0);
-                        nextMatch(popular.get(0));
+                        if (popular.isEmpty()){
+                            nextMatch(null);
+                        } else {
+                            nextMatch(popular.get(0));
+                        }
                     }
                 } catch (Exception e){
                     System.out.println(e);
@@ -174,12 +178,16 @@ public class FragMatcha extends Fragment {
         buttonNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (user.getSortBy().equals("location")) {
+                if (user.getSortBy().equals("Location")) {
                     matchFound = false;
                     selectNextMatch();
                 } else {
                     popular.remove(0);
-                    nextMatch(popular.get(0));
+                    if (popular.isEmpty()){
+                        nextMatch(null);
+                    } else {
+                        nextMatch(popular.get(0));
+                    }
                 }
             }
         });
@@ -337,20 +345,26 @@ public class FragMatcha extends Fragment {
         users.orderByChild("popularity").limitToFirst(100).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot);
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String age = snapshot.child("age").getValue().toString();
                     String location = snapshot.child("filterLocation").getValue().toString();
                     int Age = Integer.parseInt(age);
                     int filterMinAge = Integer.parseInt(user.getFilterAgeMin());
                     int filterMaxAge = Integer.parseInt(user.getFilterAgeMax());
-                    if (Age > filterMinAge && Age < filterMaxAge) {
-                        if (user.getFilterLocation().isEmpty()) {
-                            popular.add(snapshot.getKey());
-                        } else if (user.getFilterLocation().equals(location)) {
-                            popular.add(snapshot.getKey());
+                    if (filterMinAge <= Age && Age <= filterMaxAge) {
+                        if (!snapshot.getKey().equals(firebaseID)) {
+                            if (user.getFilterLocation().isEmpty()) {
+                                popular.add(snapshot.getKey());
+                            } else if (user.getFilterLocation().equals(location)) {
+                                popular.add(snapshot.getKey());
+                            }
                         }
                     }
+                }
+                if (popular.isEmpty()){
+                    nextMatch(null);
+                } else {
+                    nextMatch(popular.get(0));
                 }
             }
 
@@ -390,17 +404,17 @@ public class FragMatcha extends Fragment {
                                 matcha = Account.fetchData(dataSnapshot);
 
                                 String age = matcha.getAge();
-                                String location = matcha.getFilterLocation();
+                                String location = matcha.getLocation();
                                 int Age = Integer.parseInt(age);
                                 int filterMinAge = Integer.parseInt(user.getFilterAgeMin());
                                 int filterMaxAge = Integer.parseInt(user.getFilterAgeMax());
-                                if (Age > filterMinAge && Age < filterMaxAge) {
-                                    if (user.getFilterLocation().isEmpty()) {
+                                if (Age >= filterMinAge && Age <= filterMaxAge) {
+                                    if (!matchFound & user.getFilterLocation().isEmpty()) {
                                         matchKey = key;
                                         matchFound = true;
                                         matched.add(matchKey);
                                         nextMatch(matchKey);
-                                    } else if (user.getFilterLocation().equals(location)) {
+                                    } else if (!matchFound & user.getFilterLocation().equals(location)) {
                                         matchKey = key;
                                         matchFound = true;
                                         matched.add(matchKey);
@@ -412,8 +426,13 @@ public class FragMatcha extends Fragment {
                                         matchFound = true;
                                         nextMatch(null);
                                     }
+                                } else if (!matchFound & radius < maxRadius) {
+                                    radius = radius + 10;
+                                    nearestMatch(geoFire, latLong, firebaseID);
+                                } else if (!matchFound) {
+                                    matchFound = true;
+                                    nextMatch(null);
                                 }
-
                             }
                         }
 

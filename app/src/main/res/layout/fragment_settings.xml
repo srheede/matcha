@@ -278,20 +278,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-
-            <EditText
-                android:id="@+id/editTextFilterInterests"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ems="10"
-                android:hint="Interests"
-                android:inputType="textMultiLine" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

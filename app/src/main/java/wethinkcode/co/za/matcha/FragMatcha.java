@@ -112,7 +112,7 @@ public class FragMatcha extends Fragment {
     private void nextMatch(String firebaseID) {
         if (firebaseID != null) {
             Query query = users.child(firebaseID);
-
+            matchKey = firebaseID;
             query.addValueEventListener(new ValueEventListener() {
 
                 @Override

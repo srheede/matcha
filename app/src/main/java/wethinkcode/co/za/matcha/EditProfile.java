@@ -55,8 +55,6 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.FormatStyle;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -115,6 +113,10 @@ public class EditProfile extends AppCompatActivity {
             }
         }
     };
+
+    public EditProfile(String pic5Uri) {
+        this.pic5Uri = pic5Uri;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

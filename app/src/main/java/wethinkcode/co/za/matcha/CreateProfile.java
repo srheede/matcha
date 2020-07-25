@@ -38,7 +38,6 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -572,8 +571,8 @@ public class CreateProfile extends AppCompatActivity {
                 user.setFilterLocation("");
                 user.setFilterInterests("");
                 user.setFilterDistance("5");
-                user.setFilterAgeMin("0");
-                user.setFilterAgeMax("100");
+                user.setFilterAgeMin("18");
+                user.setFilterAgeMax("55");
                 user.setSortBy("Both");
                 user.setPopularity("0");
                 user.setAge(Age);

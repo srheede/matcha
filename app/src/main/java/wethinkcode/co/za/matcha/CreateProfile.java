@@ -570,7 +570,7 @@ public class CreateProfile extends AppCompatActivity {
                 user.setGeoHash(geoHash);
                 user.setFilterLocation("");
                 user.setFilterInterests("");
-                user.setFilterDistance("5");
+                user.setFilterDistance("100");
                 user.setFilterAgeMin("18");
                 user.setFilterAgeMax("55");
                 user.setSortBy("Both");

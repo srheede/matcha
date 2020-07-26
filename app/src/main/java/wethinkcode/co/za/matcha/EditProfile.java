@@ -114,10 +114,6 @@ public class EditProfile extends AppCompatActivity {
         }
     };
 
-    public EditProfile(String pic5Uri) {
-        this.pic5Uri = pic5Uri;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

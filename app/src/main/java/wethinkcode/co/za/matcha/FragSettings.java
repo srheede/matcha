@@ -59,6 +59,7 @@ public class FragSettings extends Fragment {
     private int maxRadius = 0;
     private int maxAge = 55;
     private int minAge = 18;
+    private String sortBy = "Popularity";
 
 
     @Override
@@ -79,8 +80,6 @@ public class FragSettings extends Fragment {
         seekBarMax = rootView.findViewById(R.id.seekBarMaxAge);
         seekBarMin = rootView.findViewById(R.id.seekBarMinAge);
         Button buttonSettings = rootView.findViewById(R.id.buttonSettings);
-        int sortByID = radioSortBy.getCheckedRadioButtonId();
-        buttonSortBy = rootView.findViewById(sortByID);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -158,6 +157,8 @@ public class FragSettings extends Fragment {
         buttonSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int sortByID = radioSortBy.getCheckedRadioButtonId();
+                buttonSortBy = rootView.findViewById(sortByID);
                 saveSettings();
             }
         });
@@ -198,8 +199,10 @@ public class FragSettings extends Fragment {
 
             if (user.getSortBy().equalsIgnoreCase("Location")) {
                 sortByLocation.toggle();
+                sortBy = "Location";
             } else {
                 sortByPopularity.toggle();
+                sortBy = "Popularity";
             }
 
             String filterDistance = user.getFilterDistance();

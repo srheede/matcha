@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.facebook.android:facebook-applinks:4.41.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4bdc4d08d77a9e763166e3ea85460ea/jetified-facebook-applinks-4.41.0/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4bdc4d08d77a9e763166e3ea85460ea/jetified-facebook-applinks-4.41.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b4bdc4d08d77a9e763166e3ea85460ea/jetified-facebook-applinks-4.41.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4c006c8c40b775222dc077d189741fa3/jetified-facebook-applinks-4.41.0/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4c006c8c40b775222dc077d189741fa3/jetified-facebook-applinks-4.41.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/4c006c8c40b775222dc077d189741fa3/jetified-facebook-applinks-4.41.0/res" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.facebook.android/facebook-applinks/4.41.0/50ee07f2f0e2aab1e02d5b7e2691a77e93bd5f45/facebook-applinks-4.41.0-javadoc.jar!/" />

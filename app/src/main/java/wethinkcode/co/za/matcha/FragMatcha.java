@@ -112,14 +112,13 @@ public class FragMatcha extends Fragment {
     private void nextMatch(String firebaseID) {
         if (firebaseID != null) {
             Query query = users.child(firebaseID);
-            matchKey = firebaseID;
             query.addValueEventListener(new ValueEventListener() {
 
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.child("email").getValue() != null) {
                         matcha = Account.fetchData(dataSnapshot);
-                        fillFormMatcha();
+                        fillFormMatcha(firebaseID);
                     }
                 }
 
@@ -145,7 +144,7 @@ public class FragMatcha extends Fragment {
         rootView.findViewById(R.id.textViewNo).setVisibility(View.INVISIBLE);
     }
 
-    private void fillFormMatcha() {
+    private void fillFormMatcha(String matchID) {
 
         Button buttonYes = rootView.findViewById(R.id.buttonYes);
 
@@ -155,7 +154,7 @@ public class FragMatcha extends Fragment {
                 try {
                     int popularity = Integer.parseInt(matcha.getPopularity());
                     matcha.setPopularity(Integer.toString(popularity + 1));
-                    users.child(matchKey).setValue(matcha);
+                    users.child(matchID).setValue(matcha);
                     if (user.getSortBy().equals("Location")) {
                         matchFound = false;
                         selectNextMatch();

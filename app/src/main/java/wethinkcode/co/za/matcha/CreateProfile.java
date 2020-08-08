@@ -14,6 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import android.view.View;
 import android.widget.Button;
@@ -49,6 +54,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -95,6 +102,17 @@ public class CreateProfile extends AppCompatActivity {
     private String geoHash;
     private LatLng latLng;
     private String Age;
+
+    Gson gson = new GsonBuilder()
+            .setLenient()
+            .create();
+
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("http://192.168.8.101:3000/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build();
+
+    JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
 
     private FirebaseAuth.AuthStateListener mAuthListener = new FirebaseAuth.AuthStateListener() {
         @Override
@@ -597,6 +615,7 @@ public class CreateProfile extends AppCompatActivity {
 
                     try {
                         users.child(firebaseID).setValue(user);
+                        postData(firebaseID, user.toString());
                         Toast.makeText(CreateProfile.this, "User account created.",
                                 Toast.LENGTH_SHORT).show();
                         Intent gotoAccount = new Intent(getApplicationContext(), Account.class);
@@ -608,6 +627,27 @@ public class CreateProfile extends AppCompatActivity {
                 }
             }
         }
+
+    private void postData(String firebaseID, String data) {
+        Post post = new Post(firebaseID, data);
+        Call<Post> call = jsonPlaceHolderApi.createPost(post);
+
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                if (!response.isSuccessful()){
+                    System.out.println(response.code());
+                    return;
+                }
+                System.out.println(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
+    }
 
 
 

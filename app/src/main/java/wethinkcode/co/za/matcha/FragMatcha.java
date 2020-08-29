@@ -112,7 +112,7 @@ public class FragMatcha extends Fragment {
             .create();
 
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://192.168.8.101:3000/")
+            .baseUrl("http://127.0.0.1:3000/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 
@@ -164,7 +164,6 @@ public class FragMatcha extends Fragment {
                     System.out.println(post.getFirebaseID());
                     System.out.println(post.getData());
                 }
-                System.out.println("here");
             }
 
             @Override

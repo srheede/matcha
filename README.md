@@ -2,159 +2,233 @@
 
 ## Matcha
 
-A dating site that allows users to connect with others based on romantic
-preference/interests and geo location.
+A mobile dating web-application that connects users based on their sort/
+filter criteria, popularity and geo-location.
 
 ## Requirements
 
--   npm v6.13.4 : <https://www.npmjs.com/get-npm>
+-   MAMP V5.7: <https://www.mamp.info/en/downloads/>
 
--   Node v12.16.1 : <https://nodejs.org/en/download/>
+-   Node.js V12.18.3.: <https://nodejs.org/en/download/>
 
--   MAMP : <https://bitnami.com/stack/mamp>
+-   Android Studio V4.0.1: <https://developer.android.com/studio?hl=es>
+
+-   API Key
 
 ## Installation
 
-### How to download the source code
+### How to download the source code:
 
--   Navigate to <https://github.com/sgigaba/matcha.git>, click on clone
-    > or download
+-   Go to <https://github.com/srheede/camagru>
 
--   Once you have downloaded the source code navigate to the folder
-    > Matcha
+-   Click Clone or Download
 
--   run npm install to install all of the modules needed for this
-    > project
+### How to set up and configure the database:
 
-### How to set up and configure the database
+-   Download MAMP
 
--   Download MAMP from the bitnami website
+-   Start the MAMP application and click Start Servers
 
--   Open the manager-osx. Go to the Manage servers tabs and make sure
-    > mysql database is running. If not press Restart.
+-   Make sure the Apache and MySQL servers are started
 
--   Press configure, this should show details about the port.
+-   Open a web browser and go to <http://localhost:8888/phpmyadmin>
 
--   Open a web browser and go to [http://localhost:(the](about:blank)
-    > port)/phpmyadmin
+-   Create a table called matcha
 
--   Create the database titled matcha, navigate to import and upload the
-    > file matcha.sql
+-   Go to import and upload the file matcha.sql
 
--   Create a database titled profile, navigate to import and upload the
-    > file profile.sql
+### How to run the program:
 
-### How to run the program
+-   Run using APK:
 
--   run node entry to start the server
+    -   Copy matcha.apk onto any android device
 
--   navigate to localhost:3000 in your browser to open the website
+    -   Run matcha.apk
 
-## Code Breakdown
+-   Without using APK:
 
--   Back end technologies
+    -   Copy Matcha to the htdocs folder
+
+    -   In the node folder run 'node server.js'
+
+    -   Open Android Studio
+
+    -   Open Matcha as a project
+
+    -   Create a file with the API key in /app/src/main/res/values
+
+    -   Run 'app' using Android Studio's emulator
+
+### Code Breakdown
+
+-   Back end technologies:
+
+    -   Java
 
     -   JavaScript
 
-    -   node.js
+    -   Node.js
 
-    -   express
+-   Front end technologies:
 
--   Front-end technologies
+    -   XML
 
-    -   handlebars
+-   Libraries/ Dependencies:
 
-    -   bootstrap
+    -   Facebook API
 
-    -   HTML
+    -   Google API
 
-    -   CSS
+    -   OKHTTP
 
--   libraries/modules/dependencies
+    -   SquareUp Picasso
 
-    -   body-parser
+-   Database Management Systems
 
-    -   express-session
+    -   MySQL
 
--   Database management systems
+    -   PhpMyAdmin
 
-    -   mysql
+-   app/src/main/java
 
-    -   phpmyadmin
+    -   Account.java
 
--   Break down of app folder structure
+        -   Secure user login area. Made up of 3 fragments: User
+            Profile, Matcha and Settings.
 
-    -   views
+    -   ChangePassword.java
 
-        -   layouts
+        -   Send user email to change their password.
 
-            -   main.handlebars
+    -   CreateProfile.java
 
-                -   This is where the overall structure of all of the
-                    > views is defined including html tags, bootstrap
-                    > configuration and any javascript files.
+        -   On registration the user is directed to this page to enter
+            further user profile information.
 
-        -   partials
+    -   EditProfile.java
 
-            -   head.handlebars
+        -   Allows user to alter their user information.
 
-            -   nav.handlebars
+    -   ForgotPW.java
 
-                -   This contains the structure of the nav bar which is
-                    > consistent throughout application.
+        -   Send email to enter new password.
 
-    -   routes (Handles the back end functionality and the rendering of
-        > views)
+    -   FragMatcha.java
 
-        -   block.js
+        -   Account fragment, which displays suitable matches.
 
-            -   Handles the websites block functionality. User is able
-                > to block and unblock a specific user. Ensures that a
-                > blocked user is not able to view your profile or send
-                > you a chat.
+    -   FragSettings.java
 
-        -   chatr.js
+        -   Account fragment, where the user can enter their sort and
+            filter preferences.
 
-            -   Handles the chat functionality. Ensures that a user is
-                > only able to chat with another user if they have both
-                > liked each other.
+    -   FragUserProfile.java
 
-        -   confirm.js
+        -   Account fragment, which displays the user's profile.
 
-            -   Validates the confirmation code a user receives via
-                > email when creating an account, ensures the user has
-                > confirmes their email adress before accessing the
-                > website.
+    -   GeoHash.java
 
-        -   custom.js
+        -   Enables geo-hashing functionality
 
-            -   Handles the back end functionality of the recommended
-                > matches based on a users predifned sexuality,
-                > preferences, interests (tags) and geo location.
+    -   JsonPlaceHolderAPI.java
 
-        -   login.js
+        -   Enables GET and POST functionality when sending and
+            receiving information using HTTP protocol.
 
-            -   Handles user login by cross checking a users email and
-                > password.
+    -   LatLong.java
 
-        -   signup.js
+        -   Convert LatLong geo-location to latitude and longitude.
 
-            -   Handles user signup by taking
+    -   MainActivity.java
 
-        -   notifications.js
+        -   Landing page to the web-application. Allows user to log in
+            to their profile.
 
-    -   helpers
+    -   Post.java
 
-        -   helper.js
+        -   Post class to POST and GET posts using HTTP protocol
 
-            -   Custom code for certain conditions that alter the views.
+    -   Register.java
 
-    -   config
+        -   Register page for user to create a new profile.
 
-        -   db.js
+    -   SettingActivity.java
 
-            -   Handles the databse connection
+        -   Settings drop-down menu functions in the account area.
 
-## Testing
+    -   User.java
+
+        -   User class to store and manipulate the user information.
+
+-   app/src/main/res/layout
+
+    -   activity_account.xml
+
+        -   Account page front-end
+
+    -   activity_changepassword.xml
+
+        -   Change Password page front-end
+
+    -   activity_createprofile.xml
+
+        -   Create Profile page front-end
+
+    -   activity_editprofile.xml
+
+        -   Edit profile page front-end
+
+    -   activity_forgot_pw.xml
+
+        -   Forgot Password page front-end
+
+    -   activity_main.xml
+
+        -   Main Activity page front-end
+
+    -   activity_register.xml
+
+        -   Register page front-end
+
+    -   fragment_matcha.xml
+
+        -   Matcha fragment front-end
+
+    -   fragment_settings.xml
+
+        -   Settings fragment front-end
+
+    -   fragment_userprofile.xml
+
+        -   User Profile fragment front-end
+
+-   node
+
+    -   app.js
+
+        -   Acts as router redirecting POST and GET
+
+    -   router_get.js
+
+        -   Fetches user profiles from User.json file and send them to
+            the GET request, when using HTTP protocol.
+
+    -   router_post.js
+
+        -   Receives user profiles from the POST request, when using
+            HTTP protocol and sends them to be added in the database.
+
+    -   server.js
+
+        -   Creates a RESTful API server
+
+-   SQL
+
+    -   Index.php
+
+        -   Receives user profiles from the RESTful API server and adds
+            them to the SQL database.
+
+### Testing
 
 <https://github.com/wethinkcode-students/corrections_42_curriculum/blob/master/matcha.markingsheet.pdf>

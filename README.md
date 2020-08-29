@@ -59,7 +59,7 @@ filter criteria, popularity and geo-location.
 
     -   Run 'app' using Android Studio's emulator
 
-### Code Breakdown
+## Code Breakdown
 
 -   Back end technologies:
 
@@ -229,6 +229,6 @@ filter criteria, popularity and geo-location.
         -   Receives user profiles from the RESTful API server and adds
             them to the SQL database.
 
-### Testing
+## Testing
 
 <https://github.com/wethinkcode-students/corrections_42_curriculum/blob/master/matcha.markingsheet.pdf>

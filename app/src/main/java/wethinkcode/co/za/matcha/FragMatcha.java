@@ -161,7 +161,7 @@ public class FragMatcha extends Fragment {
                 System.out.println(response.code());
                 List<Post> posts = response.body();
                 for (Post post : posts){
-                    System.out.println(post.getFirebaseID());
+                    System.out.println(post.getUserId());
                     System.out.println(post.getData());
                 }
             }

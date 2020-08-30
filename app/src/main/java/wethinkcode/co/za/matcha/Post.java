@@ -4,20 +4,20 @@ package wethinkcode.co.za.matcha;
 import com.google.gson.Gson;
 
 public class Post {
-    private String  firebaseID;
+    private String  userId;
     private String data;
 
-    public Post(String firebaseID, String data) {
-        this.firebaseID = firebaseID;
+    public Post(String userId, String data) {
+        this.userId = userId;
         this.data= data;
     }
 
-    public String getFirebaseID() {
-        return firebaseID;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setFirebaseID(String firebaseID) {
-        this.firebaseID = firebaseID;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getData() {

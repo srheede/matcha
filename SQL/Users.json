@@ -1,14 +1,14 @@
 [
     {
-        "firebaseID": "tJdUOZCFa8TmUFYbEoLQ9mA3sYG3",
+        "userId": "tJdUOZCFa8TmUFYbEoLQ9mA3sYG3",
         "data": "{lastName=WOW Imports, gender=Male, filterLocation=, geoHash=ke7fyjxqj9, filterAgeMax=55, bio=Wow Imports, filterInterests=, platform=matcha, popularity=0, sortBy=Both, pic2=, pic3=, email=info@wowimports.co.za, filterAgeMin=18, pic4=, pic5=, filterDistance=100, birthDate=08 08 1998, sexPref=Women, firstName=WOW Imports "
     },
     {
-        "firebaseID": "SCNi0ROvK6XwHlMXici7w8av8CD3",
+        "userId": "SCNi0ROvK6XwHlMXici7w8av8CD3",
         "data": "{lastName=CodingIsLife, gender=Male, filterLocation=, geoHash=k3vp5hn1zk, filterAgeMax=55, bio=I love coding!, filterInterests=, platform=matcha, popularity=7, sortBy=Popularity, pic2=, pic3=, email=srheede@student.wethinkcode.co.za, filterAgeMin=18, pic4=, pic5=, filterDistance=5, birthDate=21 January 2002, sexPref=Women, firstName=WeThinkCode, location=ChIJfb9uOX9nzB0RvfDUMSh9ed8, interests=, age=18, notifications=yes, profPic=https:\/\/firebasestorage.googleapis.com\/v0\/b\/matcha-809dc.appspot.com\/o\/ProfileImages\/SCNi0ROvK6XwHlMXici7w8av8CD3.jpg?alt=media"
     },
     {
-        "firebaseID": "ma6x5kr34BcECJL3a19C0v7i8lE3",
+        "userId": "ma6x5kr34BcECJL3a19C0v7i8lE3",
         "data": "{lastName=Rheeders, gender=Male, filterLocation=, geoHash=ke7fyjxqj9, filterAgeMax=55, bio=Facebook, filterInterests=, platform=matcha, popularity=3, sortBy=Popularity, pic2=https:\/\/firebasestorage.googleapis.com\/v0\/b\/matcha-809dc.appspot.com\/o\/ProfileImages\/ma6x5kr34BcECJL3a19C0v7i8lE32.jpg?alt=media"
     }
 ]

@@ -6,25 +6,25 @@
 6
 7    <uses-sdk
 8        android:minSdkVersion="26"
-8-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml
+8-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml
 9        android:targetSdkVersion="28" />
-9-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml
+9-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml
 10
 11    <uses-permission android:name="android.permission.INTERNET" />
-11-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:6:5-67
-11-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:6:22-64
+11-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:6:5-67
+11-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:6:22-64
 12    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-12-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:7:5-80
-12-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:7:22-77
+12-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:7:5-80
+12-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:7:22-77
 13    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-13-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:8:5-81
-13-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:8:22-78
+13-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:8:5-81
+13-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:8:22-78
 14    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-14-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:9:5-81
-14-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:9:22-78
+14-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:9:5-81
+14-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:9:22-78
 15    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-15-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:10:5-79
-15-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:10:22-76
+15-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:10:5-79
+15-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:10:22-76
 16    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Although the *SdkVersion is captured in gradle build files, this is required for non gradle builds -->
 16-->[com.google.android.libraries.places:places:2.2.0] /Users/Rheeders/.gradle/caches/transforms-2/files-2.1/41293f663b6665bc6fd9dfba4826f022/jetified-places-2.2.0/AndroidManifest.xml:10:5-76
 16-->[com.google.android.libraries.places:places:2.2.0] /Users/Rheeders/.gradle/caches/transforms-2/files-2.1/41293f663b6665bc6fd9dfba4826f022/jetified-places-2.2.0/AndroidManifest.xml:10:22-73
@@ -51,125 +51,125 @@
 26-->[com.google.android.gms:play-services-measurement:17.3.0] /Users/Rheeders/.gradle/caches/transforms-2/files-2.1/3ffee539b2e818cc458cb2293a51b0ab/jetified-play-services-measurement-17.3.0/AndroidManifest.xml:26:22-107
 27
 28    <application
-28-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:12:5-70:19
+28-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:12:5-70:19
 29        android:allowBackup="true"
-29-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:14:9-35
+29-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:14:9-35
 30        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 30-->[androidx.core:core:1.1.0] /Users/Rheeders/.gradle/caches/transforms-2/files-2.1/aa0588a030c213d365d4c9bff5fbb3a4/core-1.1.0/AndroidManifest.xml:24:18-86
 31        android:debuggable="true"
 32        android:extractNativeLibs="false"
 33        android:icon="@mipmap/ic_launcher"
-33-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:15:9-43
+33-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:15:9-43
 34        android:label="@string/app_name"
-34-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:16:9-41
+34-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:16:9-41
 35        android:roundIcon="@mipmap/ic_launcher_round"
-35-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:17:9-54
+35-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:17:9-54
 36        android:supportsRtl="true"
-36-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:18:9-35
+36-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:18:9-35
 37        android:testOnly="true"
 38        android:theme="@style/AppTheme"
-38-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:19:9-40
+38-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:19:9-40
 39        android:usesCleartextTraffic="true" >
-39-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:13:9-44
+39-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:13:9-44
 40        <activity android:name="wethinkcode.co.za.matcha.ChangePassword" />
-40-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:20:9-61
-40-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:20:19-49
+40-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:20:9-61
+40-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:20:19-49
 41        <activity
-41-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:21:9-23:63
+41-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:21:9-23:63
 42            android:name="wethinkcode.co.za.matcha.SettingsActivity"
-42-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:22:13-45
+42-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:22:13-45
 43            android:label="@string/title_activity_settings" />
-43-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:23:13-60
+43-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:23:13-60
 44        <activity
-44-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:24:9-27:59
+44-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:24:9-27:59
 45            android:name="wethinkcode.co.za.matcha.Account"
-45-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:25:13-36
+45-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:25:13-36
 46            android:label="@string/title_activity_account"
-46-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:26:13-59
+46-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:26:13-59
 47            android:theme="@style/AppTheme.NoActionBar" />
-47-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:27:13-56
+47-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:27:13-56
 48        <activity android:name="wethinkcode.co.za.matcha.ForgotPW" />
-48-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:28:9-46
-48-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:28:19-43
+48-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:28:9-46
+48-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:28:19-43
 49        <activity
-49-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:29:9-32:59
+49-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:29:9-32:59
 50            android:name="wethinkcode.co.za.matcha.CreateProfile"
-50-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:30:13-42
+50-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:30:13-42
 51            android:label="@string/title_activity_profile"
-51-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:31:13-59
+51-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:31:13-59
 52            android:theme="@style/AppTheme.NoActionBar" />
-52-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:32:13-56
+52-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:32:13-56
 53        <activity
-53-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:33:9-36:59
+53-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:33:9-36:59
 54            android:name="wethinkcode.co.za.matcha.EditProfile"
-54-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:34:13-40
+54-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:34:13-40
 55            android:label="@string/title_activity_profile"
-55-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:35:13-59
+55-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:35:13-59
 56            android:theme="@style/AppTheme.NoActionBar" />
-56-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:36:13-56
+56-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:36:13-56
 57        <activity android:name="wethinkcode.co.za.matcha.MainActivity" >
-57-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:37:9-43:20
-57-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:37:19-47
+57-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:37:9-43:20
+57-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:37:19-47
 58            <intent-filter>
-58-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:38:13-42:29
+58-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:38:13-42:29
 59                <action android:name="android.intent.action.MAIN" />
-59-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:39:17-69
-59-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:39:25-66
+59-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:39:17-69
+59-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:39:25-66
 60
 61                <category android:name="android.intent.category.LAUNCHER" />
-61-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:41:17-77
-61-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:41:27-74
+61-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:41:17-77
+61-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:41:27-74
 62            </intent-filter>
 63        </activity>
 64        <activity android:name="wethinkcode.co.za.matcha.Register" />
-64-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:44:9-46
-64-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:44:19-43
+64-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:44:9-46
+64-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:44:19-43
 65
 66        <meta-data
-66-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:46:9-48:55
+66-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:46:9-48:55
 67            android:name="com.facebook.sdk.ApplicationId"
-67-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:47:13-58
+67-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:47:13-58
 68            android:value="@string/facebook_app_id" />
-68-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:48:13-52
+68-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:48:13-52
 69        <meta-data
-69-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:50:9-52:71
+69-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:50:9-52:71
 70            android:name="com.google.android.geo.API_KEY"
-70-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:51:13-58
+70-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:51:13-58
 71            android:value="AIzaSyBgF0JZGgJDOVfDJrIapQRidnvIWcs7pfU" />
-71-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:52:13-68
+71-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:52:13-68
 72
 73        <activity
-73-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:54:9-57:48
+73-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:54:9-57:48
 74            android:name="com.facebook.FacebookActivity"
-74-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:55:13-57
+74-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:55:13-57
 75            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-75-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:56:13-96
+75-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:56:13-96
 76            android:label="@string/app_name"
-76-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:57:13-45
+76-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:57:13-45
 77            android:theme="@style/com_facebook_activity_theme" />
 77-->[com.facebook.android:facebook-common:4.41.0] /Users/Rheeders/.gradle/caches/transforms-2/files-2.1/7eca179a3b5c2d55991c32112056173d/jetified-facebook-common-4.41.0/AndroidManifest.xml:32:13-63
 78        <activity
-78-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:58:9-69:20
+78-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:58:9-69:20
 79            android:name="com.facebook.CustomTabActivity"
-79-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:59:13-58
+79-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:59:13-58
 80            android:exported="true" >
-80-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:60:13-36
+80-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:60:13-36
 81            <intent-filter>
-81-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:61:13-68:29
+81-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:61:13-68:29
 82                <action android:name="android.intent.action.VIEW" />
-82-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:62:17-69
-82-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:62:25-66
+82-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:62:17-69
+82-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:62:25-66
 83
 84                <category android:name="android.intent.category.DEFAULT" />
-84-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:64:17-76
-84-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:64:27-73
+84-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:64:17-76
+84-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:64:27-73
 85                <category android:name="android.intent.category.BROWSABLE" />
-85-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:65:17-78
-85-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:65:27-75
+85-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:65:17-78
+85-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:65:27-75
 86
 87                <data android:scheme="@string/fb_login_protocol_scheme" />
-87-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:67:17-75
-87-->/Users/Rheeders/Desktop/matchaMaster/app/src/main/AndroidManifest.xml:67:23-72
+87-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:67:17-75
+87-->/Applications/MAMP/htdocs/matcha/app/src/main/AndroidManifest.xml:67:23-72
 88            </intent-filter>
 89        </activity>
 90        <activity

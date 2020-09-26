@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
+            "outputFile": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v23/values-v23.xml",
             "map": [
                 {
                     "source": "/Users/Rheeders/.gradle/caches/transforms-2/files-2.1/5a64ebfd821119389e800080c2b082dc/appcompat-1.1.0/res/values-v23/values-v23.xml",

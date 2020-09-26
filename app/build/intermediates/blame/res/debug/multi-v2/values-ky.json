@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-ky/values-ky.xml",
+            "outputFile": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-ky/values-ky.xml",
             "map": [
                 {
                     "source": "/Users/Rheeders/.gradle/caches/transforms-2/files-2.1/4a411c496cf180097bfdf4ca4f72e27a/browser-1.2.0/res/values-ky/values-ky.xml",

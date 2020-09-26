@@ -102,7 +102,7 @@ public class FragMatcha extends Fragment {
     private ArrayList<String> matched = new ArrayList<String>();
     private String matchKey;
     private ArrayList<String> popular = new ArrayList<String>();
-    private String firebaseID;
+    private String userId;
     public static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client;
@@ -131,7 +131,7 @@ public class FragMatcha extends Fragment {
     }
 
     private void postData(String data) {
-        Post post = new Post(firebaseID, data);
+        Post post = new Post(userId, data);
         Call<Post> call = jsonPlaceHolderApi.createPost(post);
 
         call.enqueue(new Callback<Post>() {
@@ -174,10 +174,10 @@ public class FragMatcha extends Fragment {
     }
 
     private void updateUI() {
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        if (firebaseUser != null) {
-            firebaseID = mAuth.getCurrentUser().getUid();
-            Query query = users.child(firebaseID);
+        FirebaseUser User = mAuth.getCurrentUser();
+        if (User != null) {
+            userId = mAuth.getCurrentUser().getUid();
+            Query query = users.child(userId);
 
             query.addValueEventListener(new ValueEventListener() {
 
@@ -205,9 +205,9 @@ public class FragMatcha extends Fragment {
         }
     }
 
-    private void nextMatch(String firebaseID) {
-        if (firebaseID != null) {
-            Query query = users.child(firebaseID);
+    private void nextMatch(String userId) {
+        if (userId != null) {
+            Query query = users.child(userId);
 
             query.addValueEventListener(new ValueEventListener() {
 
@@ -437,7 +437,7 @@ public class FragMatcha extends Fragment {
         return rating;
     }
 
-    private void popularMatch(String firebaseID) {
+    private void popularMatch(String userId) {
         users.orderByChild("popularity").limitToFirst(100).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -448,7 +448,7 @@ public class FragMatcha extends Fragment {
                     int filterMinAge = Integer.parseInt(user.getFilterAgeMin());
                     int filterMaxAge = Integer.parseInt(user.getFilterAgeMax());
                     if (filterMinAge <= Age && Age <= filterMaxAge) {
-                        if (!snapshot.getKey().equals(firebaseID)) {
+                        if (!snapshot.getKey().equals(userId)) {
                             if (user.getFilterLocation().isEmpty()) {
                                 popular.add(snapshot.getKey());
                             } else if (user.getFilterLocation().equals(location)) {
@@ -471,17 +471,17 @@ public class FragMatcha extends Fragment {
         });
     }
 
-    private void nearestMatch(GeoFire geoFire, LatLong latLong, String firebaseID) {
+    private void nearestMatch(GeoFire geoFire, LatLong latLong, String userId) {
         GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLong.getLat(), latLong.getLon()), radius);
         geoQuery.removeAllListeners();
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                if (!matchFound & !key.equals(firebaseID) & !matched.contains(key)) {
+                if (!matchFound & !key.equals(userId) & !matched.contains(key)) {
                     filterMatch(key);
                 } else if (!matchFound & radius < maxRadius) {
                     radius = radius + 10;
-                    nearestMatch(geoFire, latLong, firebaseID);
+                    nearestMatch(geoFire, latLong, userId);
                 } else if (!matchFound){
                     matchFound = true;
                     nextMatch(null);
@@ -517,14 +517,14 @@ public class FragMatcha extends Fragment {
                                         nextMatch(matchKey);
                                     } else if (!matchFound & radius < maxRadius) {
                                         radius = radius + 10;
-                                        nearestMatch(geoFire, latLong, firebaseID);
+                                        nearestMatch(geoFire, latLong, userId);
                                     } else if (!matchFound){
                                         matchFound = true;
                                         nextMatch(null);
                                     }
                                 } else if (!matchFound & radius < maxRadius) {
                                     radius = radius + 10;
-                                    nearestMatch(geoFire, latLong, firebaseID);
+                                    nearestMatch(geoFire, latLong, userId);
                                 } else if (!matchFound) {
                                     matchFound = true;
                                     nextMatch(null);

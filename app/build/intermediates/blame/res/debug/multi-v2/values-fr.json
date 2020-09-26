@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-fr/values-fr.xml",
+            "outputFile": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-fr/values-fr.xml",
             "map": [
                 {
                     "source": "/Users/Rheeders/.gradle/caches/transforms-2/files-2.1/e45e28317feba572e84ae2615ed46138/jetified-facebook-login-4.41.0/res/values-fr/values-fr.xml",

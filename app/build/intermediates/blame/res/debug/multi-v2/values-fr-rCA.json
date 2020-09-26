@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-fr-rCA/values-fr-rCA.xml",
+            "outputFile": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-fr-rCA/values-fr-rCA.xml",
             "map": [
                 {
                     "source": "/Users/Rheeders/.gradle/caches/transforms-2/files-2.1/41293f663b6665bc6fd9dfba4826f022/jetified-places-2.2.0/res/values-fr-rCA/values.xml",

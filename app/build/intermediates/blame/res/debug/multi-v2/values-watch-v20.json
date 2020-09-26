@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-watch-v20/values-watch-v20.xml",
+            "outputFile": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
                     "source": "/Users/Rheeders/.gradle/caches/transforms-2/files-2.1/316123570a6fa332a87bb50c58b4fcc0/jetified-play-services-auth-18.0.0/res/values-watch-v20/values.xml",

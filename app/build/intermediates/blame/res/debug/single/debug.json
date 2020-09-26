@@ -1,158 +1,158 @@
 [
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_round.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/xml_pref_general.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/xml/pref_general.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/xml_pref_general.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/xml/pref_general.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/xml_network_security_config.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/xml/network_security_config.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_fragment_matcha.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/fragment_matcha.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/drawable_ic_sync_black_24dp.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/drawable/ic_sync_black_24dp.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/menu_menu_account.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/menu/menu_account.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/xml_pref_data_sync.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/xml/pref_data_sync.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_account.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_account.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/drawable_ic_info_black_24dp.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/drawable/ic_info_black_24dp.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher_foreground.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_change_password.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_change_password.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/xml_pref_data_sync.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/xml/pref_data_sync.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_forgot_pw.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_forgot_pw.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_fragment_settings.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/fragment_settings.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_fragment_userprofile.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/fragment_userprofile.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/menu_menu_account.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/menu/menu_account.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/xml_pref_headers.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/xml/pref_headers.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-mdpi/ic_launcher.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_main.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_main.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/drawable_ic_notifications_black_24dp.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/drawable/ic_notifications_black_24dp.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/drawable_avatar.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/drawable/avatar.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_fragment_userprofile.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/fragment_userprofile.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_forgot_pw.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_forgot_pw.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/drawable_ic_launcher_background.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/drawable_ic_sync_black_24dp.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/drawable/ic_sync_black_24dp.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_account.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_account.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/drawable-v24_ic_launcher_foreground.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/drawable-v24/ic_launcher_foreground.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_fragment_matcha.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/fragment_matcha.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-hdpi/ic_launcher_round.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/drawable_ic_info_black_24dp.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/drawable/ic_info_black_24dp.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/drawable-v24_ic_launcher_foreground.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/drawable-v24/ic_launcher_foreground.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher_round.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_fragment_settings.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/fragment_settings.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher_round.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_createprofile.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_createprofile.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_change_password.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_change_password.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/xml_network_security_config.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/xml/network_security_config.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher_round.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-mdpi/ic_launcher_round.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_register.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_register.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_editprofile.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_editprofile.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher_foreground.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/drawable_avatar.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/drawable/avatar.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_register.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_register.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/xml_pref_headers.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/xml/pref_headers.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/drawable_ic_notifications_black_24dp.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/drawable/ic_notifications_black_24dp.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_foreground.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-hdpi/ic_launcher.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/layout_activity_createprofile.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/layout/activity_createprofile.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_main.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_main.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/drawable_ic_launcher_background.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/drawable/ic_launcher_background.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/xml_pref_notification.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/xml/pref_notification.xml"
     },
     {
-        "merged": "/Users/Rheeders/Desktop/matchaMaster/app/build/intermediates/res/merged/debug/xml_pref_notification.xml.flat",
-        "source": "/Users/Rheeders/Desktop/matchaMaster/app/src/main/res/xml/pref_notification.xml"
+        "merged": "/Applications/MAMP/htdocs/matcha/app/build/intermediates/res/merged/debug/layout_activity_editprofile.xml.flat",
+        "source": "/Applications/MAMP/htdocs/matcha/app/src/main/res/layout/activity_editprofile.xml"
     }
 ]
